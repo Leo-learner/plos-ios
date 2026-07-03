@@ -157,8 +157,8 @@ public enum Rules {
     ) -> [String] {
         var notes: [String] = []
 
-        if let lastExercise = context.health.lastExercise {
-            let todayDate = RestSchedule.parseDate(context.today) ?? Date()
+        if let lastExercise = context.health.lastExercise,
+           let todayDate = RestSchedule.parseDate(context.today) {
             let daysSince = Calendar(identifier: .gregorian)
                 .dateComponents([.day], from: lastExercise, to: todayDate).day ?? 0
             if daysSince >= 4 {
