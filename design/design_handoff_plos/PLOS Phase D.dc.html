@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+ --font-cn:"Noto Sans SC","PingFang SC","Hiragino Sans GB",system-ui,sans-serif;
+ --font-num:"Nunito","Noto Sans SC",system-ui,sans-serif;
+ --canvas:#E8ECE3;
+ --paper:#F6F8F2;
+ --surface:#FFFFFF;
+ --surface-2:#EFF3EA;
+ --ink:#26302A;
+ --ink-2:#586159;
+ --ink-3:#8C958B;
+ --hairline:#E5EADF;
+ --g-50:#EFF5F0;
+ --g-100:#DDEAE0;
+ --g-200:#BFD8C6;
+ --g-300:#98C0A5;
+ --g-400:#6FA381;
+ --g-500:#4E8262;
+ --g-600:#3D6B4F;
+ --g-700:#30553F;
+ --g-800:#274633;
+ --amber:#B4842F;
+ --amber-bg:#F7EFD8;
+ --peri:#7A80C4;
+ --peri-bg:#ECEDF8;
+ --clay:#A2825C;
+ --clay-bg:#F1E9DB;
+ --slate:#5F8B98;
+ --slate-bg:#E7F0F1;
+ --warn:#A9802F;
+ --warn-bg:#F8EFD6;
+ --info:#5F8B98;
+ --info-bg:#E7F0F1;
+ --r-card:26px;
+ --r-lg:20px;
+ --r-md:14px;
+ --r-sm:10px;
+ --r-pill:999px;
+ --shadow-card:0 6px 20px rgba(38,58,44,.06),0 1px 2px rgba(38,58,44,.05);
+ --shadow-pop:0 14px 34px rgba(38,58,44,.13);
+ --shadow-phone:0 40px 80px -24px rgba(24,42,32,.42),0 10px 26px rgba(24,42,32,.16);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--canvas);font-family:var(--font-cn);-webkit-font-smoothing:antialiased;color:var(--ink)}
+@keyframes plosBreathe{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.35)}}
+@keyframes plosFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+</style>
+</helmet>
+
+<header style="width:1220px;max-width:1220px;margin:0 auto;padding:48px 6px 10px">
+  <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px">
+    <div style="width:36px;height:36px;border-radius:11px;background:var(--g-500);display:flex;align-items:center;justify-content:center;box-shadow:0 7px 15px -5px rgba(78,130,98,.7)">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M11.5 20.5C7 20.5 4.2 17.2 4.2 12.6C4.2 7.4 8.2 4 19.3 3.6C19.3 13.8 15.7 20.5 11.5 20.5Z" fill="rgba(255,255,255,.35)" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M11.5 20.5C11.5 15 13.4 9.4 18 5.6" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <span style="font-family:var(--font-num);font-weight:800;font-size:23px;color:var(--ink);letter-spacing:.3px">PLOS</span>
+    <span style="font-size:14px;color:var(--ink-3);font-weight:500;align-self:flex-end;padding-bottom:4px">Personal Learning OS · Phase D</span>
+  </div>
+  <h1 style="margin:0 0 12px;font-size:31px;font-weight:900;letter-spacing:-.5px;color:var(--ink);max-width:780px;line-height:1.25">月目标固定，日计划由系统<span style="color:var(--g-600)">每天生成</span>。</h1>
+  <p style="margin:0 0 22px;font-size:15.5px;line-height:1.75;color:var(--ink-2);max-width:700px">以「系统每天在运行」代替「靠意志力坚持」。休息日、0% 的日子都不是崩盘 —— 只是系统运行的一天。以下为高保真静态屏 · 全部横切状态 · 可复用组件 + 可映射 Tailwind 的设计 token。</p>
+  <div style="display:flex;flex-wrap:wrap;gap:9px;align-items:center">
+    <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--g-700);background:var(--g-50);border:1px solid var(--g-100);padding:6px 12px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:var(--g-500)"></span>学习日</span>
+    <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:#7a6034;background:var(--clay-bg);border:1px solid #e6dac6;padding:6px 12px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:var(--clay)"></span>节奏休息日</span>
+    <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:#436670;background:var(--slate-bg);border:1px solid #d3e3e5;padding:6px 12px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:var(--slate)"></span>灵活休息日</span>
+    <span style="width:1px;height:20px;background:var(--hairline);margin:0 4px"></span>
+    <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:#8a6420;background:var(--amber-bg);border:1px solid #ecdfbe;padding:6px 12px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:var(--amber)"></span>高能</span>
+    <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--g-700);background:var(--g-50);border:1px solid var(--g-100);padding:6px 12px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:var(--g-500)"></span>普通</span>
+    <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:#4f5399;background:var(--peri-bg);border:1px solid #dcdef3;padding:6px 12px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:var(--peri)"></span>低谷</span>
+  </div>
+  <p style="margin:16px 0 0;font-size:12.5px;color:var(--ink-3)">画布可自由缩放 / 平移 · 每屏左上角有编号，在对话里直接引用即可（如「把 04 的 reasoning 再放大」）。</p>
+</header>
+
+<section id="secA" style="width:1220px;max-width:1220px;margin:0 auto;padding:34px 0 8px">
+  <div style="display:flex;align-items:center;gap:12px;margin:0 0 22px;padding:0 4px">
+    <a href="#secA" style="font-family:var(--font-num);font-weight:800;font-size:13px;color:#fff;background:var(--g-600);padding:5px 11px;border-radius:8px;text-decoration:none;letter-spacing:.3px">A</a>
+    <span style="font-weight:700;font-size:17px;color:var(--ink)">起点 · 空态</span>
+    <span style="font-size:13px;color:var(--ink-3)">还没建月 → 引导去建月设置</span>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start">
+
+    <div id="01" style="display:flex;flex-direction:column;gap:11px;flex:none;scroll-margin:90px">
+      <div style="display:flex;align-items:baseline;gap:8px;padding-left:6px">
+        <a href="#01" style="font-family:var(--font-num);font-weight:800;font-size:12px;color:var(--g-700);background:var(--g-100);padding:3px 8px;border-radius:6px;text-decoration:none">01</a>
+        <span style="font-size:13px;font-weight:500;color:var(--ink-2)">首次运行 · 空态</span>
+      </div>
+      <div style="width:380px;background:linear-gradient(158deg,#22322b,#12201a);border-radius:46px;padding:12px;box-shadow:var(--shadow-phone);flex:none">
+        <div style="position:relative;width:356px;min-height:762px;background:var(--paper);border-radius:36px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:52px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;flex:none;position:relative;z-index:5">
+            <span style="font-family:var(--font-num);font-weight:700;font-size:15px;color:var(--ink)">9:24</span>
+            <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:104px;height:30px;background:#0e1a14;border-radius:16px"></div>
+            <svg width="66" height="14" viewBox="0 0 66 14" fill="none"><rect x="0" y="7" width="3" height="7" rx="1" fill="var(--ink)"/><rect x="5" y="5" width="3" height="9" rx="1" fill="var(--ink)"/><rect x="10" y="3" width="3" height="11" rx="1" fill="var(--ink)"/><rect x="15" y="1" width="3" height="13" rx="1" fill="var(--ink)"/><path d="M27 4.6c3-2.6 8-2.6 11 0M29.2 7.6c2-1.7 4.6-1.7 6.6 0M31.7 10.5c.9-.8 1.9-.8 2.8 0" stroke="var(--ink)" stroke-width="1.3" stroke-linecap="round"/><rect x="46" y="2.6" width="17" height="9" rx="2.6" stroke="var(--ink)" stroke-width="1.1"/><rect x="47.6" y="4.1" width="12" height="6" rx="1.2" fill="var(--g-500)"/><rect x="64" y="5" width="1.7" height="4" rx=".8" fill="var(--ink)"/></svg>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;padding:22px 26px 6px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:7px">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M11.5 20.5C7 20.5 4.2 17.2 4.2 12.6C4.2 7.4 8.2 4 19.3 3.6C19.3 13.8 15.7 20.5 11.5 20.5Z" fill="var(--g-200)" stroke="var(--g-600)" stroke-width="1.5" stroke-linejoin="round"/><path d="M11.5 20.5C11.5 15 13.4 9.4 18 5.6" stroke="var(--g-600)" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span style="font-family:var(--font-num);font-weight:800;font-size:13px;letter-spacing:.4px;color:var(--g-700)">PLOS</span>
+              </div>
+              <span style="font-size:11.5px;color:var(--ink-3);background:var(--surface-2);padding:5px 11px;border-radius:999px">系统尚未启动</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px;padding:16px 4px">
+              <div style="width:104px;height:104px;border-radius:50%;background:radial-gradient(circle at 50% 38%,var(--g-100),var(--g-50));display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px var(--g-100),0 12px 26px -12px rgba(78,130,98,.5);animation:plosFloat 5.5s ease-in-out infinite">
+                <svg width="50" height="50" viewBox="0 0 24 24" fill="none"><path d="M11.5 20.5C7 20.5 4.2 17.2 4.2 12.6C4.2 7.4 8.2 4 19.3 3.6C19.3 13.8 15.7 20.5 11.5 20.5Z" fill="var(--g-200)" stroke="var(--g-600)" stroke-width="1.4" stroke-linejoin="round"/><path d="M11.5 20.5C11.5 15 13.4 9.4 18 5.6" stroke="var(--g-600)" stroke-width="1.4" stroke-linecap="round"/></svg>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:11px">
+                <h1 style="margin:0;font-size:23px;font-weight:700;color:var(--ink);letter-spacing:-.2px">还没有本月的系统</h1>
+                <p style="margin:0;font-size:15px;line-height:1.75;color:var(--ink-2);max-width:272px">先花两分钟建一个月计划。之后每天早上，系统会替你决定今天学什么 —— 你只要打开看一眼。</p>
+              </div>
+            </div>
+            <div style="background:var(--g-50);border:1px solid var(--g-100);border-radius:var(--r-lg);padding:14px 16px;display:flex;gap:11px;align-items:flex-start;margin-bottom:16px">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex:none;margin-top:1px"><path d="M11.5 20.5C7 20.5 4.2 17.2 4.2 12.6C4.2 7.4 8.2 4 19.3 3.6C19.3 13.8 15.7 20.5 11.5 20.5Z" fill="var(--g-200)" stroke="var(--g-600)" stroke-width="1.5" stroke-linejoin="round"/><path d="M11.5 20.5C11.5 15 13.4 9.4 18 5.6" stroke="var(--g-600)" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <p style="margin:0;font-size:13.5px;line-height:1.65;color:var(--g-700)">每天不是新的开始，只是<b style="font-weight:700">系统运行</b>的一天。允许失败，不允许脱轨。</p>
+            </div>
+            <button style="appearance:none;border:none;cursor:pointer;width:100%;height:54px;border-radius:var(--r-pill);background:var(--g-500);color:#fff;font-family:var(--font-cn);font-size:16px;font-weight:700;box-shadow:0 10px 20px -7px rgba(78,130,98,.65);display:flex;align-items:center;justify-content:center;gap:8px" style-hover="background:var(--g-600);transform:translateY(-1px)">
+              建立本月计划
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 12h13M13 6l6 6-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <p style="text-align:center;font-size:12px;color:var(--ink-3);margin:13px 0 8px">建一次，用一个月</p>
+          </div>
+          <div style="height:26px;display:flex;align-items:center;justify-content:center;flex:none">
+            <div style="width:128px;height:5px;border-radius:3px;background:rgba(38,48,42,.22)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<section id="secB" style="width:1220px;max-width:1220px;margin:0 auto;padding:34px 0 8px">
+  <div style="display:flex;align-items:center;gap:12px;margin:0 0 22px;padding:0 4px">
+    <a href="#secB" style="font-family:var(--font-num);font-weight:800;font-size:13px;color:#fff;background:var(--g-600);padding:5px 11px;border-radius:8px;text-decoration:none;letter-spacing:.3px">B</a>
+    <span style="font-weight:700;font-size:17px;color:var(--ink)">建月设置</span>
+    <span style="font-size:13px;color:var(--ink-3)">低频，信息密度可高 · 建一次生成本月骨架</span>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start">
+
+    <div id="02" style="display:flex;flex-direction:column;gap:11px;flex:none;scroll-margin:90px">
+      <div style="display:flex;align-items:baseline;gap:8px;padding-left:6px">
+        <a href="#02" style="font-family:var(--font-num);font-weight:800;font-size:12px;color:var(--g-700);background:var(--g-100);padding:3px 8px;border-radius:6px;text-decoration:none">02</a>
+        <span style="font-size:13px;font-weight:500;color:var(--ink-2)">建月设置 · 目标 / 节奏 / 保底预览</span>
+      </div>
+      <div style="width:380px;background:linear-gradient(158deg,#22322b,#12201a);border-radius:46px;padding:12px;box-shadow:var(--shadow-phone);flex:none">
+        <div style="position:relative;width:356px;background:var(--paper);border-radius:36px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:52px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;flex:none;position:relative;z-index:5">
+            <span style="font-family:var(--font-num);font-weight:700;font-size:15px;color:var(--ink)">9:24</span>
+            <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:104px;height:30px;background:#0e1a14;border-radius:16px"></div>
+            <svg width="66" height="14" viewBox="0 0 66 14" fill="none"><rect x="0" y="7" width="3" height="7" rx="1" fill="var(--ink)"/><rect x="5" y="5" width="3" height="9" rx="1" fill="var(--ink)"/><rect x="10" y="3" width="3" height="11" rx="1" fill="var(--ink)"/><rect x="15" y="1" width="3" height="13" rx="1" fill="var(--ink)"/><path d="M27 4.6c3-2.6 8-2.6 11 0M29.2 7.6c2-1.7 4.6-1.7 6.6 0M31.7 10.5c.9-.8 1.9-.8 2.8 0" stroke="var(--ink)" stroke-width="1.3" stroke-linecap="round"/><rect x="46" y="2.6" width="17" height="9" rx="2.6" stroke="var(--ink)" stroke-width="1.1"/><rect x="47.6" y="4.1" width="12" height="6" rx="1.2" fill="var(--g-500)"/><rect x="64" y="5" width="1.7" height="4" rx=".8" fill="var(--ink)"/></svg>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 20px 14px">
+            <button style="appearance:none;border:none;background:none;cursor:pointer;width:34px;height:34px;border-radius:11px;background:var(--surface);border:1px solid var(--hairline);display:flex;align-items:center;justify-content:center;padding:0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="var(--ink-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <span style="font-size:16px;font-weight:700;color:var(--ink)">建立 6 月计划</span>
+            <span style="font-family:var(--font-num);font-weight:700;font-size:13px;color:var(--g-700);background:var(--g-50);padding:6px 11px;border-radius:999px">2026·06</span>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:0 20px 8px;display:flex;flex-direction:column;gap:20px">
+
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <div style="display:flex;align-items:baseline;justify-content:space-between">
+                <span style="font-size:13px;font-weight:700;color:var(--ink-2);letter-spacing:.3px">目标 <span style="color:var(--ink-3);font-weight:500">· 4</span></span>
+                <span style="font-size:12px;color:var(--ink-3)">越重要，平日分到的时间越多</span>
+              </div>
+
+              <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px 15px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:11px">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+                  <div style="display:flex;flex-direction:column;gap:9px">
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <span style="font-size:16.5px;font-weight:700;color:var(--ink)">高数</span>
+                      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--g-700);background:var(--g-50);padding:4px 9px;border-radius:999px"><span style="width:6px;height:6px;border-radius:50%;background:var(--g-500)"></span>按期完成</span>
+                    </div>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap">
+                      <span style="font-size:11.5px;font-weight:500;color:var(--ink-2);background:var(--surface-2);padding:4px 9px;border-radius:8px">6 章</span>
+                      <span style="font-size:11.5px;font-weight:500;color:var(--ink-2);background:var(--surface-2);padding:4px 9px;border-radius:8px">截止 6/30</span>
+                    </div>
+                  </div>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--ink-3)" style="opacity:.5;flex:none"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+                </div>
+                <div style="height:1px;background:var(--hairline)"></div>
+                <div style="display:flex;flex-direction:column;gap:11px">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:12.5px;color:var(--ink-3)">重要性</span>
+                    <div style="display:inline-flex;background:var(--surface-2);border:1px solid var(--hairline);border-radius:999px;padding:3px;gap:2px">
+                      <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 11px;border-radius:999px">低</span>
+                      <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 11px;border-radius:999px">中</span>
+                      <span style="font-size:12px;font-weight:700;color:#fff;background:var(--g-500);padding:5px 11px;border-radius:999px;box-shadow:0 2px 6px -1px rgba(78,130,98,.55)">高</span>
+                      <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 10px;border-radius:999px">最高</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:12.5px;color:var(--ink-3)">达标线</span>
+                    <span style="font-family:var(--font-num);font-weight:700;font-size:14px;color:var(--g-700);background:var(--g-50);padding:5px 11px;border-radius:999px">80%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px 15px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:11px">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+                  <div style="display:flex;flex-direction:column;gap:9px">
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <span style="font-size:16.5px;font-weight:700;color:var(--ink)">英语</span>
+                      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#436670;background:var(--slate-bg);padding:4px 9px;border-radius:999px"><span style="width:6px;height:6px;border-radius:50%;background:var(--slate)"></span>每天做</span>
+                    </div>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap">
+                      <span style="font-size:11.5px;font-weight:500;color:var(--ink-2);background:var(--surface-2);padding:4px 9px;border-radius:8px">每天阅读</span>
+                    </div>
+                  </div>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--ink-3)" style="opacity:.5;flex:none"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+                </div>
+                <div style="height:1px;background:var(--hairline)"></div>
+                <div style="display:flex;flex-direction:column;gap:11px">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:12.5px;color:var(--ink-3)">重要性</span>
+                    <div style="display:inline-flex;background:var(--surface-2);border:1px solid var(--hairline);border-radius:999px;padding:3px;gap:2px">
+                      <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 11px;border-radius:999px">低</span>
+                      <span style="font-size:12px;font-weight:700;color:#fff;background:var(--g-500);padding:5px 11px;border-radius:999px;box-shadow:0 2px 6px -1px rgba(78,130,98,.55)">中</span>
+                      <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 11px;border-radius:999px">高</span>
+                      <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 10px;border-radius:999px">最高</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:12.5px;color:var(--ink-3)">达标线</span>
+                    <span style="font-family:var(--font-num);font-weight:700;font-size:14px;color:var(--g-700);background:var(--g-50);padding:5px 11px;border-radius:999px">70%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px 15px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:11px">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+                  <div style="display:flex;flex-direction:column;gap:9px">
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <span style="font-size:16.5px;font-weight:700;color:var(--ink)">线代</span>
+                      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--g-700);background:var(--g-50);padding:4px 9px;border-radius:999px"><span style="width:6px;height:6px;border-radius:50%;background:var(--g-500)"></span>按期完成</span>
+                    </div>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap">
+                      <span style="font-size:11.5px;font-weight:500;color:var(--ink-2);background:var(--surface-2);padding:4px 9px;border-radius:8px">100 题</span>
+                      <span style="font-size:11.5px;font-weight:500;color:var(--ink-2);background:var(--surface-2);padding:4px 9px;border-radius:8px">截止 6/28</span>
+                    </div>
+                  </div>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--ink-3)" style="opacity:.5;flex:none"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+                </div>
+                <div style="height:1px;background:var(--hairline)"></div>
+                <div style="display:flex;flex-direction:column;gap:11px">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:12.5px;color:var(--ink-3)">重要性</span>
+                    <div style="display:inline-flex;background:var(--surface-2);border:1px solid var(--hairline);border-radius:999px;padding:3px;gap:2px">
+                      <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 11px;border-radius:999px">低</span>
+                      <span style="font-size:12px;font-weight:700;color:#fff;background:var(--g-500);padding:5px 11px;border-radius:999px;box-shadow:0 2px 6px -1px rgba(78,130,98,.55)">中</span>
+                      <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 11px;border-radius:999px">高</span>
+                      <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 10px;border-radius:999px">最高</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:12.5px;color:var(--ink-3)">达标线</span>
+                    <span style="font-family:var(--font-num);font-weight:700;font-size:14px;color:var(--g-700);background:var(--g-50);padding:5px 11px;border-radius:999px">80%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px 15px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:11px">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+                  <div style="display:flex;flex-direction:column;gap:9px">
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <span style="font-size:16.5px;font-weight:700;color:var(--ink)">项目</span>
+                      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#8a6420;background:var(--amber-bg);padding:4px 9px;border-radius:999px"><span style="width:6px;height:6px;border-radius:50%;background:var(--amber)"></span>里程碑</span>
+                    </div>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap">
+                      <span style="font-size:11.5px;font-weight:500;color:var(--ink-2);background:var(--surface-2);padding:4px 9px;border-radius:8px">课程作业</span>
+                      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:#8a6420;background:var(--amber-bg);padding:4px 9px;border-radius:8px"><span style="width:6px;height:6px;border-radius:50%;background:var(--amber)"></span>截止 6/25</span>
+                    </div>
+                  </div>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--ink-3)" style="opacity:.5;flex:none"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>
+                </div>
+                <div style="height:1px;background:var(--hairline)"></div>
+                <div style="display:flex;flex-direction:column;gap:11px">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:12.5px;color:var(--ink-3)">重要性</span>
+                    <div style="display:inline-flex;background:var(--surface-2);border:1px solid var(--hairline);border-radius:999px;padding:3px;gap:2px">
+                      <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 11px;border-radius:999px">低</span>
+                      <span style="font-size:12px;font-weight:700;color:#fff;background:var(--g-500);padding:5px 11px;border-radius:999px;box-shadow:0 2px 6px -1px rgba(78,130,98,.55)">中</span>
+                      <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 11px;border-radius:999px">高</span>
+                      <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 10px;border-radius:999px">最高</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:12.5px;color:var(--ink-3)">达标线</span>
+                    <span style="font-size:12px;color:var(--ink-3)">里程碑 · 无达标线</span>
+                  </div>
+                </div>
+              </div>
+
+              <button style="appearance:none;cursor:pointer;width:100%;height:46px;border-radius:var(--r-lg);background:none;border:1.5px dashed var(--g-200);color:var(--g-600);font-family:var(--font-cn);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:7px">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="var(--g-500)" stroke-width="2" stroke-linecap="round"/></svg>
+                添加目标
+              </button>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <span style="font-size:13px;font-weight:700;color:var(--ink-2);letter-spacing:.3px">休息策略</span>
+              <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:16px 15px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:13px">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <span style="font-size:14px;color:var(--ink)">学习节奏</span>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <span style="font-size:13px;color:var(--ink-2)">学</span>
+                    <div style="display:inline-flex;align-items:center;border:1px solid var(--hairline);border-radius:999px;background:var(--surface);overflow:hidden">
+                      <button style="appearance:none;border:none;background:none;cursor:pointer;width:26px;height:26px;color:var(--ink-3);font-size:15px;padding:0">−</button>
+                      <span style="font-family:var(--font-num);font-weight:700;font-size:14px;color:var(--ink);min-width:20px;text-align:center">5</span>
+                      <button style="appearance:none;border:none;background:none;cursor:pointer;width:26px;height:26px;color:var(--g-600);font-size:15px;padding:0">+</button>
+                    </div>
+                    <span style="font-size:13px;color:var(--ink-2)">休</span>
+                    <div style="display:inline-flex;align-items:center;border:1px solid var(--hairline);border-radius:999px;background:var(--surface);overflow:hidden">
+                      <button style="appearance:none;border:none;background:none;cursor:pointer;width:26px;height:26px;color:var(--ink-3);font-size:15px;padding:0">−</button>
+                      <span style="font-family:var(--font-num);font-weight:700;font-size:14px;color:var(--ink);min-width:20px;text-align:center">2</span>
+                      <button style="appearance:none;border:none;background:none;cursor:pointer;width:26px;height:26px;color:var(--g-600);font-size:15px;padding:0">+</button>
+                    </div>
+                  </div>
+                </div>
+                <div style="height:1px;background:var(--hairline)"></div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="display:flex;flex-direction:column;gap:2px">
+                    <span style="font-size:14px;color:var(--ink)">灵活休息额度</span>
+                    <span style="font-size:11.5px;color:var(--ink-3)">状态差时随时用，不算脱轨</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:7px">
+                    <div style="display:inline-flex;align-items:center;border:1px solid var(--hairline);border-radius:999px;background:var(--surface);overflow:hidden">
+                      <button style="appearance:none;border:none;background:none;cursor:pointer;width:26px;height:26px;color:var(--ink-3);font-size:15px;padding:0">−</button>
+                      <span style="font-family:var(--font-num);font-weight:700;font-size:14px;color:var(--ink);min-width:20px;text-align:center">2</span>
+                      <button style="appearance:none;border:none;background:none;cursor:pointer;width:26px;height:26px;color:var(--g-600);font-size:15px;padding:0">+</button>
+                    </div>
+                    <span style="font-size:13px;color:var(--ink-2)">天</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <span style="font-size:13px;font-weight:700;color:var(--ink-2);letter-spacing:.3px">考试与健康</span>
+              <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:16px 15px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:13px">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                  <div style="display:flex;flex-direction:column;gap:2px">
+                    <span style="font-size:14px;color:var(--ink)">考试时间</span>
+                    <span style="font-size:11.5px;color:var(--ink-3)">考前一天自动只复习、不上新内容</span>
+                  </div>
+                  <span style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:#8a6420;background:var(--amber-bg);padding:4px 10px;border-radius:999px;white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--amber)"></span>高数 · 6/19</span>
+                </div>
+                <button style="appearance:none;cursor:pointer;width:100%;height:42px;border-radius:var(--r-md);background:none;border:1.5px dashed var(--g-200);color:var(--g-600);font-family:var(--font-cn);font-size:13.5px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:7px">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="5.5" width="16" height="14.5" rx="3" stroke="var(--g-500)" stroke-width="1.6"/><path d="M4 10h16" stroke="var(--g-500)" stroke-width="1.6"/><path d="M8.5 3.5v3M15.5 3.5v3" stroke="var(--g-500)" stroke-width="1.6" stroke-linecap="round"/><path d="M12 12.5v5M9.5 15h5" stroke="var(--g-500)" stroke-width="1.6" stroke-linecap="round"/></svg>
+                  导入考试时间（日历 / 手动添加）
+                </button>
+                <div style="height:1px;background:var(--hairline)"></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                  <div style="display:flex;flex-direction:column;gap:2px">
+                    <span style="font-size:14px;color:var(--ink)">启用健康门槛</span>
+                    <span style="font-size:11.5px;color:var(--ink-3)">每天早晨户外运动打卡，触发健康提醒 · 不改计划</span>
+                  </div>
+                  <div style="width:48px;height:29px;border-radius:999px;background:var(--g-500);position:relative;flex:none;box-shadow:inset 0 1px 2px rgba(0,0,0,.08)"><div style="position:absolute;top:2.5px;right:2.5px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25)"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background:linear-gradient(160deg,var(--g-50),#e6f1e9);border:1px solid var(--g-100);border-radius:var(--r-lg);padding:16px;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:flex-end;justify-content:space-between">
+                <div style="display:flex;flex-direction:column;gap:3px">
+                  <span style="font-size:12px;font-weight:600;color:var(--g-600);letter-spacing:.3px">保底学习日 · 实时算出</span>
+                  <div style="display:flex;align-items:baseline;gap:6px">
+                    <span style="font-family:var(--font-num);font-weight:800;font-size:34px;color:var(--g-700);line-height:1">20</span>
+                    <span style="font-size:14px;font-weight:600;color:var(--g-600)">个学习日</span>
+                  </div>
+                </div>
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" style="opacity:.7"><path d="M11.5 20.5C7 20.5 4.2 17.2 4.2 12.6C4.2 7.4 8.2 4 19.3 3.6C19.3 13.8 15.7 20.5 11.5 20.5Z" fill="var(--g-200)" stroke="var(--g-600)" stroke-width="1.4" stroke-linejoin="round"/><path d="M11.5 20.5C11.5 15 13.4 9.4 18 5.6" stroke="var(--g-600)" stroke-width="1.4" stroke-linecap="round"/></svg>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:4px">
+                <span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--clay)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--clay)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--clay)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--clay)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--clay)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--clay)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--clay)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--clay)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span><span style="width:12px;height:12px;border-radius:4px;background:var(--g-400)"></span>
+              </div>
+              <p style="margin:0;font-size:12.5px;line-height:1.6;color:var(--g-700)">单日基准将对齐这 20 天完成 100% —— 这是系统每天给你分配时间的<b style="font-weight:700">依据</b>。灵活休息 2 天不占用保底。</p>
+            </div>
+
+            <button style="appearance:none;border:none;cursor:pointer;width:100%;height:54px;border-radius:var(--r-pill);background:var(--g-500);color:#fff;font-family:var(--font-cn);font-size:16px;font-weight:700;box-shadow:0 10px 20px -7px rgba(78,130,98,.6);display:flex;align-items:center;justify-content:center;gap:8px;margin-top:2px" style-hover="background:var(--g-600)">
+              保存 · 生成本月骨架
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 12h13M13 6l6 6-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <div style="height:26px;display:flex;align-items:center;justify-content:center;flex:none;padding-top:6px">
+            <div style="width:128px;height:5px;border-radius:3px;background:rgba(38,48,42,.22)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="secC" style="width:1220px;max-width:1220px;margin:0 auto;padding:34px 0 8px">
+  <div style="display:flex;align-items:center;gap:12px;margin:0 0 8px;padding:0 4px">
+    <a href="#secC" style="font-family:var(--font-num);font-weight:800;font-size:13px;color:#fff;background:var(--g-600);padding:5px 11px;border-radius:8px;text-decoration:none;letter-spacing:.3px">C</a>
+    <span style="font-weight:700;font-size:17px;color:var(--ink)">早晨 · 学习日 · 能量点选</span>
+    <span style="font-size:13px;color:var(--ink-3)">第 1 步（共 3 步）</span>
+  </div>
+  <p style="margin:0 0 22px;padding:0 4px;font-size:13px;color:var(--ink-2);max-width:760px">已选定此形态：系统按「历史 + 考试临近」自动预填一个能量档，用户可一键改 —— 启动成本最低。</p>
+  <div style="display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start">
+
+<div id="03" style="display:flex;flex-direction:column;gap:11px;flex:none;scroll-margin:90px">
+      <div style="display:flex;align-items:baseline;gap:8px;padding-left:6px">
+        <a href="#03" style="font-family:var(--font-num);font-weight:800;font-size:12px;color:var(--g-700);background:var(--g-100);padding:3px 8px;border-radius:6px;text-decoration:none">03</a>
+        <span style="font-size:13px;font-weight:500;color:var(--ink-2)">能量点选 · 系统自动预填，可改</span>
+      </div>
+      <div style="width:380px;background:linear-gradient(158deg,#22322b,#12201a);border-radius:46px;padding:12px;box-shadow:var(--shadow-phone);flex:none">
+        <div style="position:relative;width:356px;min-height:762px;background:var(--paper);border-radius:36px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:52px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;flex:none;position:relative;z-index:5">
+            <span style="font-family:var(--font-num);font-weight:700;font-size:15px;color:var(--ink)">7:12</span>
+            <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:104px;height:30px;background:#0e1a14;border-radius:16px"></div>
+            <svg width="66" height="14" viewBox="0 0 66 14" fill="none"><rect x="0" y="7" width="3" height="7" rx="1" fill="var(--ink)"/><rect x="5" y="5" width="3" height="9" rx="1" fill="var(--ink)"/><rect x="10" y="3" width="3" height="11" rx="1" fill="var(--ink)"/><rect x="15" y="1" width="3" height="13" rx="1" fill="var(--ink)"/><path d="M27 4.6c3-2.6 8-2.6 11 0M29.2 7.6c2-1.7 4.6-1.7 6.6 0M31.7 10.5c.9-.8 1.9-.8 2.8 0" stroke="var(--ink)" stroke-width="1.3" stroke-linecap="round"/><rect x="46" y="2.6" width="17" height="9" rx="2.6" stroke="var(--ink)" stroke-width="1.1"/><rect x="47.6" y="4.1" width="12" height="6" rx="1.2" fill="var(--g-500)"/><rect x="64" y="5" width="1.7" height="4" rx=".8" fill="var(--ink)"/></svg>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;padding:16px 20px 8px;gap:18px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--g-700);background:var(--g-50);border:1px solid var(--g-100);padding:7px 13px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:var(--g-500)"></span>学习日</span>
+              <span style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--g-700);background:var(--g-50);border:1px solid var(--g-100);padding:6px 11px;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:var(--g-500);animation:plosBreathe 2.4s ease-in-out infinite"></span>连续运行 12 天</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <span style="font-size:13px;color:var(--ink-3)">6 月 12 日 · 周五 · 早安</span>
+              <h1 style="margin:0;font-size:23px;font-weight:700;color:var(--ink);letter-spacing:-.2px">系统先替你预判了今天</h1>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <button style="appearance:none;cursor:pointer;width:100%;border:1.5px solid var(--hairline);background:var(--surface);border-radius:var(--r-lg);padding:13px 15px;display:flex;align-items:center;gap:14px;text-align:left;opacity:.72" style-hover="opacity:1;border-color:var(--amber)">
+                <div style="width:42px;height:42px;border-radius:13px;background:var(--amber-bg);display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M13 2L5 13h5l-1 9 9-12h-5l1-8Z" fill="var(--amber)" stroke="var(--amber)" stroke-width="1.1" stroke-linejoin="round"/></svg></div>
+                <div style="display:flex;flex-direction:column;gap:2px;flex:1"><span style="font-size:15.5px;font-weight:700;color:var(--ink)">高能</span><span style="font-size:12px;color:var(--ink-3)">状态很好，可以多推进一点</span></div>
+              </button>
+              <button style="appearance:none;cursor:pointer;width:100%;border:1.5px solid var(--hairline);background:var(--surface);border-radius:var(--r-lg);padding:13px 15px;display:flex;align-items:center;gap:14px;text-align:left;opacity:.72" style-hover="opacity:1;border-color:var(--g-300)">
+                <div style="width:42px;height:42px;border-radius:13px;background:var(--g-50);display:flex;align-items:center;justify-content:center;flex:none"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.4" fill="var(--g-400)"/><g stroke="var(--g-500)" stroke-width="1.7" stroke-linecap="round"><path d="M12 2.6v2.4M12 19v2.4M4.4 12H2M22 12h-2.4M5.8 5.8l1.6 1.6M16.6 16.6l1.6 1.6M18.2 5.8l-1.6 1.6M7.4 16.6l-1.6 1.6"/></g></svg></div>
+                <div style="display:flex;flex-direction:column;gap:2px;flex:1"><span style="font-size:15.5px;font-weight:700;color:var(--ink)">普通</span><span style="font-size:12px;color:var(--ink-3)">按基准来，稳稳当当</span></div>
+              </button>
+              <button style="appearance:none;cursor:pointer;width:100%;border:2px solid var(--g-500);background:var(--g-50);border-radius:var(--r-lg);padding:13px 15px;display:flex;align-items:center;gap:14px;text-align:left;box-shadow:0 8px 20px -10px rgba(78,130,98,.5)">
+                <div style="width:46px;height:46px;border-radius:14px;background:var(--peri-bg);display:flex;align-items:center;justify-content:center;flex:none"><svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5Z" fill="var(--peri)" stroke="var(--peri)" stroke-width="1.1" stroke-linejoin="round"/></svg></div>
+                <div style="display:flex;flex-direction:column;gap:4px;flex:1"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:16.5px;font-weight:700;color:var(--ink)">低谷</span><span style="font-size:10.5px;font-weight:700;color:#fff;background:var(--g-500);padding:2px 7px;border-radius:6px">系统预填</span></div><span style="font-size:12.5px;color:var(--ink-2)">先别为难自己，做最要紧的</span></div>
+                <div style="width:26px;height:26px;border-radius:50%;background:var(--g-500);display:flex;align-items:center;justify-content:center;flex:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              </button>
+            </div>
+            <div style="display:flex;gap:9px;align-items:flex-start;background:var(--peri-bg);border-radius:var(--r-md);padding:12px 13px">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style="flex:none;margin-top:1px"><circle cx="12" cy="12" r="9.2" stroke="var(--peri)" stroke-width="1.6"/><path d="M12 11v5.5" stroke="var(--peri)" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.15" fill="var(--peri)"/></svg>
+              <p style="margin:0;font-size:12.5px;line-height:1.65;color:#4f5399">依据：连续 3 晚睡得晚 · 高数考试还剩 <b style="font-weight:700">7 天</b>，先稳一稳。<b style="font-weight:700">不对？点上面任意一个改掉。</b></p>
+            </div>
+            <div style="flex:1"></div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <button style="appearance:none;border:none;cursor:pointer;width:100%;height:54px;border-radius:var(--r-pill);background:var(--g-500);color:#fff;font-family:var(--font-cn);font-size:16px;font-weight:700;box-shadow:0 10px 20px -7px rgba(78,130,98,.6);display:flex;align-items:center;justify-content:center;gap:8px" style-hover="background:var(--g-600)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.7 4.8L18.5 9.5l-4.8 1.7L12 16l-1.7-4.8L5.5 9.5l4.8-1.7L12 3Z" fill="#fff"/></svg>生成今日计划</button>
+              <p style="margin:0 0 6px;text-align:center;font-size:12px;color:var(--ink-3)">已按「低谷」预填，直接生成 —— 或先改状态</p>
+            </div>
+          </div>
+          <div style="height:26px;display:flex;align-items:center;justify-content:center;flex:none"><div style="width:128px;height:5px;border-radius:3px;background:rgba(38,48,42,.22)"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="secC2" style="width:1220px;max-width:1220px;margin:0 auto;padding:34px 0 8px">
+  <div style="display:flex;align-items:center;gap:12px;margin:0 0 22px;padding:0 4px">
+    <a href="#secC2" style="font-family:var(--font-num);font-weight:800;font-size:13px;color:#fff;background:var(--g-600);padding:5px 11px;border-radius:8px;text-decoration:none;letter-spacing:.3px">C2</a>
+    <span style="font-weight:700;font-size:17px;color:var(--ink)">早晨 · 健康打卡</span>
+    <span style="font-size:13px;color:var(--ink-3)">一屏一事 · 结果直接喂给健康提醒 · 仅在建月开启「健康门槛」时出现</span>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start">
+
+    <div id="13" style="display:flex;flex-direction:column;gap:11px;flex:none;scroll-margin:90px">
+      <div style="display:flex;align-items:baseline;gap:8px;padding-left:6px">
+        <a href="#13" style="font-family:var(--font-num);font-weight:800;font-size:12px;color:var(--g-700);background:var(--g-100);padding:3px 8px;border-radius:6px;text-decoration:none">13</a>
+        <span style="font-size:13px;font-weight:500;color:var(--ink-2)">健康打卡 · 滑到最右=完成 · 旁按钮=暂未完成</span>
+      </div>
+      <div style="width:380px;background:linear-gradient(158deg,#22322b,#12201a);border-radius:46px;padding:12px;box-shadow:var(--shadow-phone);flex:none">
+        <div style="position:relative;width:356px;min-height:762px;background:linear-gradient(170deg,var(--g-500),var(--g-700));border-radius:36px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:52px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;flex:none;position:relative;z-index:5">
+            <span style="font-family:var(--font-num);font-weight:700;font-size:15px;color:#fff">7:16</span>
+            <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:104px;height:30px;background:#0e1a14;border-radius:16px"></div>
+            <svg width="66" height="14" viewBox="0 0 66 14" fill="none"><rect x="0" y="7" width="3" height="7" rx="1" fill="#fff"/><rect x="5" y="5" width="3" height="9" rx="1" fill="#fff"/><rect x="10" y="3" width="3" height="11" rx="1" fill="#fff"/><rect x="15" y="1" width="3" height="13" rx="1" fill="#fff"/><path d="M27 4.6c3-2.6 8-2.6 11 0M29.2 7.6c2-1.7 4.6-1.7 6.6 0M31.7 10.5c.9-.8 1.9-.8 2.8 0" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><rect x="46" y="2.6" width="17" height="9" rx="2.6" stroke="#fff" stroke-width="1.1"/><rect x="47.6" y="4.1" width="12" height="6" rx="1.2" fill="#fff"/><rect x="64" y="5" width="1.7" height="4" rx=".8" fill="#fff"/></svg>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;padding:16px 22px 10px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);padding:6px 12px;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:#fff"></span>健康打卡</span>
+              <span style="font-size:13px;color:rgba(255,255,255,.75)">6 月 12 日 · 周五</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:22px;padding:10px 4px">
+              <div style="width:104px;height:104px;border-radius:50%;background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;animation:plosFloat 5.5s ease-in-out infinite">
+                <svg width="50" height="50" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.4" stroke="#fff" stroke-width="1.6"/><g stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M12 2.6v2.4M12 19v2.4M4.4 12H2M22 12h-2.4M5.8 5.8l1.6 1.6M16.6 16.6l1.6 1.6M18.2 5.8l-1.6 1.6M7.4 16.6l-1.6 1.6"/></g></svg>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:11px">
+                <h1 style="margin:0;font-size:24px;font-weight:700;color:#fff;letter-spacing:-.2px">今天户外运动了吗？</h1>
+                <p style="margin:0;font-size:14.5px;line-height:1.7;color:rgba(255,255,255,.78);max-width:262px">滑到最右记一笔。只影响健康提醒，不影响预算和计划。</p>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:8px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="position:relative;flex:1;height:58px;border-radius:999px;background:rgba(255,255,255,.16);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)">
+                  <div style="position:absolute;left:5px;top:5px;width:48px;height:48px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(18,32,26,.3)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 12h13M13 6l6 6-6 6" stroke="var(--g-600)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                  <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding-left:38px;font-size:13.5px;font-weight:600;color:rgba(255,255,255,.8)">滑到最右 · 完成运动</span>
+                </div>
+                <button style="appearance:none;cursor:pointer;flex:none;height:58px;padding:0 15px;border-radius:999px;background:none;border:1.5px solid rgba(255,255,255,.35);color:rgba(255,255,255,.85);font-family:var(--font-cn);font-size:13px;font-weight:600" style-hover="background:rgba(255,255,255,.1)">暂未完成</button>
+              </div>
+              <p style="margin:0;text-align:center;font-size:12px;line-height:1.6;color:rgba(255,255,255,.62)">打卡直接进入健康提醒：连续 4 天未运动，明早会出现黄色提醒条。</p>
+            </div>
+          </div>
+          <div style="height:26px;display:flex;align-items:center;justify-content:center;flex:none"><div style="width:128px;height:5px;border-radius:3px;background:rgba(255,255,255,.55)"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="secD" style="width:1220px;max-width:1220px;margin:0 auto;padding:34px 0 8px">
+  <div style="display:flex;align-items:center;gap:12px;margin:0 0 8px;padding:0 4px">
+    <a href="#secD" style="font-family:var(--font-num);font-weight:800;font-size:13px;color:#fff;background:var(--g-600);padding:5px 11px;border-radius:8px;text-decoration:none;letter-spacing:.3px">D</a>
+    <span style="font-weight:700;font-size:17px;color:var(--ink)">早晨 · 学习日 · 今日计划</span>
+    <span style="font-size:13px;color:var(--ink-3)">第 3 步 · reasoning 是信任的唯一理由，必须显眼可读</span>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start">
+
+    <div id="04" style="display:flex;flex-direction:column;gap:11px;flex:none;scroll-margin:90px">
+      <div style="display:flex;align-items:baseline;gap:8px;padding-left:6px">
+        <a href="#04" style="font-family:var(--font-num);font-weight:800;font-size:12px;color:var(--g-700);background:var(--g-100);padding:3px 8px;border-radius:6px;text-decoration:none">04</a>
+        <span style="font-size:13px;font-weight:500;color:var(--ink-2)">低谷日 · 健康提醒条 · reasoning</span>
+      </div>
+      <div style="width:380px;background:linear-gradient(158deg,#22322b,#12201a);border-radius:46px;padding:12px;box-shadow:var(--shadow-phone);flex:none">
+        <div style="position:relative;width:356px;min-height:762px;background:var(--paper);border-radius:36px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:52px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;flex:none;position:relative;z-index:5">
+            <span style="font-family:var(--font-num);font-weight:700;font-size:15px;color:var(--ink)">7:14</span>
+            <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:104px;height:30px;background:#0e1a14;border-radius:16px"></div>
+            <svg width="66" height="14" viewBox="0 0 66 14" fill="none"><rect x="0" y="7" width="3" height="7" rx="1" fill="var(--ink)"/><rect x="5" y="5" width="3" height="9" rx="1" fill="var(--ink)"/><rect x="10" y="3" width="3" height="11" rx="1" fill="var(--ink)"/><rect x="15" y="1" width="3" height="13" rx="1" fill="var(--ink)"/><path d="M27 4.6c3-2.6 8-2.6 11 0M29.2 7.6c2-1.7 4.6-1.7 6.6 0M31.7 10.5c.9-.8 1.9-.8 2.8 0" stroke="var(--ink)" stroke-width="1.3" stroke-linecap="round"/><rect x="46" y="2.6" width="17" height="9" rx="2.6" stroke="var(--ink)" stroke-width="1.1"/><rect x="47.6" y="4.1" width="12" height="6" rx="1.2" fill="var(--g-500)"/><rect x="64" y="5" width="1.7" height="4" rx=".8" fill="var(--ink)"/></svg>
+          </div>
+          <div style="background:var(--warn-bg);border-top:1px solid #ecdfbe;border-bottom:1px solid #ecdfbe;padding:11px 20px;display:flex;align-items:flex-start;gap:10px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex:none;margin-top:1px"><path d="M12 4.5L21 19.5H3L12 4.5Z" fill="rgba(169,128,47,.12)" stroke="var(--warn)" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 10v4" stroke="var(--warn)" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16.4" r="1.05" fill="var(--warn)"/></svg>
+            <p style="margin:0;font-size:12.5px;line-height:1.55;color:#8a6420;flex:1">已连续 <b style="font-weight:700">4 天</b>没有运动，今晚早点睡、动一动。<b style="font-weight:700">不改今天的计划。</b></p>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex:none;margin-top:2px;opacity:.55"><path d="M6 6l12 12M18 6L6 18" stroke="#8a6420" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;padding:18px 20px 8px;gap:17px">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <span style="font-size:13px;color:var(--ink-3)">6 月 12 日 · 今日计划</span>
+                <div style="display:flex;align-items:baseline;gap:7px"><span style="font-family:var(--font-num);font-weight:800;font-size:28px;color:var(--ink);line-height:1">45</span><span style="font-size:14px;color:var(--ink-2)">分钟 · 2 件事</span></div>
+              </div>
+              <span style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#4f5399;background:var(--peri-bg);padding:7px 12px;border-radius:999px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5Z" fill="var(--peri)"/></svg>低谷</span>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px 15px;box-shadow:var(--shadow-card)">
+                <div style="width:27px;height:27px;border-radius:9px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:800;font-size:14px;color:var(--ink-3);flex:none">1</div>
+                <div style="display:flex;flex-direction:column;gap:5px;flex:1">
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px;font-weight:700;color:var(--ink)">线代</span><span style="font-family:var(--font-num);font-weight:700;font-size:13px;color:var(--g-700);background:var(--g-50);padding:3px 9px;border-radius:8px">30<span style="font-size:10px;font-weight:600"> min</span></span></div>
+                  <div style="display:flex;align-items:center;gap:7px"><span style="font-size:13px;color:var(--ink-2)">线代刷题（接昨天）</span><span style="font-size:10.5px;font-weight:600;color:#8a6420;background:var(--amber-bg);padding:2px 7px;border-radius:6px">落后节奏</span></div>
+                </div>
+                <div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--hairline);flex:none"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px 15px;box-shadow:var(--shadow-card)">
+                <div style="width:27px;height:27px;border-radius:9px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:800;font-size:14px;color:var(--ink-3);flex:none">2</div>
+                <div style="display:flex;flex-direction:column;gap:5px;flex:1">
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px;font-weight:700;color:var(--ink)">英语</span><span style="font-family:var(--font-num);font-weight:700;font-size:13px;color:var(--g-700);background:var(--g-50);padding:3px 9px;border-radius:8px">15<span style="font-size:10px;font-weight:600"> min</span></span></div>
+                  <div style="display:flex;align-items:center;gap:7px"><span style="font-size:13px;color:var(--ink-2)">英语阅读</span><span style="font-size:10.5px;font-weight:600;color:#436670;background:var(--slate-bg);padding:2px 7px;border-radius:6px">每日</span></div>
+                </div>
+                <div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--hairline);flex:none"></div>
+              </div>
+            </div>
+
+            <div style="background:linear-gradient(160deg,var(--g-50),#e5f0e8);border:1px solid var(--g-100);border-radius:var(--r-card);padding:17px 17px 18px;display:flex;flex-direction:column;gap:11px">
+              <div style="display:flex;align-items:center;gap:9px">
+                <div style="width:30px;height:30px;border-radius:10px;background:var(--g-100);display:flex;align-items:center;justify-content:center;flex:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M11.5 20.5C7 20.5 4.2 17.2 4.2 12.6C4.2 7.4 8.2 4 19.3 3.6C19.3 13.8 15.7 20.5 11.5 20.5Z" fill="var(--g-300)" stroke="var(--g-700)" stroke-width="1.4" stroke-linejoin="round"/><path d="M11.5 20.5C11.5 15 13.4 9.4 18 5.6" stroke="var(--g-700)" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+                <span style="font-size:13px;font-weight:700;color:var(--g-700);letter-spacing:.3px">系统为什么这么排</span>
+              </div>
+              <p style="margin:0;font-size:15.5px;line-height:1.78;color:var(--g-800)">今天是低谷日，把预算压到 <b style="font-weight:700">45 分钟</b>。线代落后节奏 <b style="font-weight:700">27%</b>、<b style="font-weight:700">保底剩余学习日只剩 13 天</b>、压力最高，所以今天只保它和英语日常；其余<b style="font-weight:700">明天再追</b>。</p>
+            </div>
+
+            <div style="flex:1"></div>
+
+            <button style="appearance:none;cursor:pointer;width:100%;height:50px;border-radius:var(--r-pill);background:var(--surface);border:1.5px solid var(--hairline);color:var(--ink-2);font-family:var(--font-cn);font-size:14.5px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:9px" style-hover="border-color:var(--slate);color:#436670">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+              用一个灵活休息日
+              <span style="font-family:var(--font-num);font-weight:700;font-size:11.5px;color:#436670;background:var(--slate-bg);padding:3px 9px;border-radius:999px">灵活休息 2/2</span>
+            </button>
+            <p style="margin:0 0 6px;text-align:center;font-size:12px;color:var(--ink-3)">晚上回来花一分钟汇报，明早接着今天重排</p>
+          </div>
+          <div style="height:26px;display:flex;align-items:center;justify-content:center;flex:none"><div style="width:128px;height:5px;border-radius:3px;background:rgba(38,48,42,.22)"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="05" style="display:flex;flex-direction:column;gap:11px;flex:none;scroll-margin:90px">
+      <div style="display:flex;align-items:baseline;gap:8px;padding-left:6px">
+        <a href="#05" style="font-family:var(--font-num);font-weight:800;font-size:12px;color:var(--g-700);background:var(--g-100);padding:3px 8px;border-radius:6px;text-decoration:none">05</a>
+        <span style="font-size:13px;font-weight:500;color:var(--ink-2)">普通日 · 考前轻量条 · 达标科目降权淡化</span>
+      </div>
+      <div style="width:380px;background:linear-gradient(158deg,#22322b,#12201a);border-radius:46px;padding:12px;box-shadow:var(--shadow-phone);flex:none">
+        <div style="position:relative;width:356px;min-height:762px;background:var(--paper);border-radius:36px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:52px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;flex:none;position:relative;z-index:5">
+            <span style="font-family:var(--font-num);font-weight:700;font-size:15px;color:var(--ink)">7:09</span>
+            <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:104px;height:30px;background:#0e1a14;border-radius:16px"></div>
+            <svg width="66" height="14" viewBox="0 0 66 14" fill="none"><rect x="0" y="7" width="3" height="7" rx="1" fill="var(--ink)"/><rect x="5" y="5" width="3" height="9" rx="1" fill="var(--ink)"/><rect x="10" y="3" width="3" height="11" rx="1" fill="var(--ink)"/><rect x="15" y="1" width="3" height="13" rx="1" fill="var(--ink)"/><path d="M27 4.6c3-2.6 8-2.6 11 0M29.2 7.6c2-1.7 4.6-1.7 6.6 0M31.7 10.5c.9-.8 1.9-.8 2.8 0" stroke="var(--ink)" stroke-width="1.3" stroke-linecap="round"/><rect x="46" y="2.6" width="17" height="9" rx="2.6" stroke="var(--ink)" stroke-width="1.1"/><rect x="47.6" y="4.1" width="12" height="6" rx="1.2" fill="var(--g-500)"/><rect x="64" y="5" width="1.7" height="4" rx=".8" fill="var(--ink)"/></svg>
+          </div>
+          <div style="background:var(--info-bg);border-top:1px solid #d3e3e5;border-bottom:1px solid #d3e3e5;padding:11px 20px;display:flex;align-items:flex-start;gap:10px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex:none;margin-top:1px"><rect x="4" y="5.5" width="16" height="14.5" rx="3" stroke="var(--info)" stroke-width="1.6"/><path d="M4 10h16" stroke="var(--info)" stroke-width="1.6"/><path d="M8.5 3.5v3M15.5 3.5v3" stroke="var(--info)" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="14.8" r="1.3" fill="var(--info)"/></svg>
+            <p style="margin:0;font-size:12.5px;line-height:1.55;color:#436670;flex:1">明天<b style="font-weight:700">高数考试</b>：今天只复习，不上新内容。</p>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;padding:18px 20px 8px;gap:16px">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <span style="font-size:13px;color:var(--ink-3)">6 月 18 日 · 今日计划</span>
+                <div style="display:flex;align-items:baseline;gap:7px"><span style="font-family:var(--font-num);font-weight:800;font-size:28px;color:var(--ink);line-height:1">35</span><span style="font-size:14px;color:var(--ink-2)">分钟 · 2 件事</span></div>
+              </div>
+              <span style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--g-700);background:var(--g-50);padding:7px 12px;border-radius:999px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" fill="var(--g-400)"/></svg>普通</span>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px 15px;box-shadow:var(--shadow-card)">
+                <div style="width:27px;height:27px;border-radius:9px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:800;font-size:14px;color:var(--ink-3);flex:none">1</div>
+                <div style="display:flex;flex-direction:column;gap:5px;flex:1">
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px;font-weight:700;color:var(--ink)">高数</span><span style="font-family:var(--font-num);font-weight:700;font-size:13px;color:var(--g-700);background:var(--g-50);padding:3px 9px;border-radius:8px">20<span style="font-size:10px;font-weight:600"> min</span></span></div>
+                  <div style="display:flex;align-items:center;gap:7px"><span style="font-size:13px;color:var(--ink-2)">错题复习 1–3 章</span><span style="font-size:10.5px;font-weight:600;color:#8a6420;background:var(--amber-bg);padding:2px 7px;border-radius:6px;white-space:nowrap">考前 · 只复习</span></div>
+                </div>
+                <div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--hairline);flex:none"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px 15px;box-shadow:var(--shadow-card)">
+                <div style="width:27px;height:27px;border-radius:9px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:800;font-size:14px;color:var(--ink-3);flex:none">2</div>
+                <div style="display:flex;flex-direction:column;gap:5px;flex:1">
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px;font-weight:700;color:var(--ink)">英语</span><span style="font-family:var(--font-num);font-weight:700;font-size:13px;color:var(--g-700);background:var(--g-50);padding:3px 9px;border-radius:8px">15<span style="font-size:10px;font-weight:600"> min</span></span></div>
+                  <div style="display:flex;align-items:center;gap:7px"><span style="font-size:13px;color:var(--ink-2)">英语阅读</span><span style="font-size:10.5px;font-weight:600;color:#436670;background:var(--slate-bg);padding:2px 7px;border-radius:6px">每日</span></div>
+                </div>
+                <div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--hairline);flex:none"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:13px;background:var(--surface);border:1px dashed var(--g-200);border-radius:var(--r-lg);padding:12px 15px;opacity:.62">
+                <div style="width:27px;height:27px;border-radius:50%;background:var(--g-50);display:flex;align-items:center;justify-content:center;flex:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="var(--g-500)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                <div style="display:flex;flex-direction:column;gap:4px;flex:1">
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:15px;font-weight:700;color:var(--ink-2)">线代</span><span style="display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;color:var(--g-600);background:var(--g-50);padding:2px 8px;border-radius:999px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="var(--g-600)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>已达标 80%</span></div>
+                  <span style="font-size:12px;color:var(--ink-3)">今天让位给未达标科目，明天轻量维持</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="background:linear-gradient(160deg,var(--g-50),#e5f0e8);border:1px solid var(--g-100);border-radius:var(--r-card);padding:17px 17px 18px;display:flex;flex-direction:column;gap:11px">
+              <div style="display:flex;align-items:center;gap:9px">
+                <div style="width:30px;height:30px;border-radius:10px;background:var(--g-100);display:flex;align-items:center;justify-content:center;flex:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M11.5 20.5C7 20.5 4.2 17.2 4.2 12.6C4.2 7.4 8.2 4 19.3 3.6C19.3 13.8 15.7 20.5 11.5 20.5Z" fill="var(--g-300)" stroke="var(--g-700)" stroke-width="1.4" stroke-linejoin="round"/><path d="M11.5 20.5C11.5 15 13.4 9.4 18 5.6" stroke="var(--g-700)" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+                <span style="font-size:13px;font-weight:700;color:var(--g-700);letter-spacing:.3px">系统为什么这么排</span>
+              </div>
+              <p style="margin:0;font-size:15.5px;line-height:1.78;color:var(--g-800)">明天高数考试，今日<b style="font-weight:700">只安排复习（20 分钟），不上新内容</b>。线代已过 <b style="font-weight:700">80% 达标线</b>，优先级让给未达标科目；英语保持每日节奏。</p>
+            </div>
+
+            <div style="flex:1"></div>
+
+            <button style="appearance:none;cursor:pointer;width:100%;height:50px;border-radius:var(--r-pill);background:var(--surface);border:1.5px solid var(--hairline);color:var(--ink-2);font-family:var(--font-cn);font-size:14.5px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:9px" style-hover="border-color:var(--slate);color:#436670">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+              用一个灵活休息日
+              <span style="font-family:var(--font-num);font-weight:700;font-size:11.5px;color:#436670;background:var(--slate-bg);padding:3px 9px;border-radius:999px">灵活休息 2/2</span>
+            </button>
+            <p style="margin:0 0 6px;text-align:center;font-size:12px;color:var(--ink-3)">达标科目不会消失，只是让位 —— 明天仍会轻量维持</p>
+          </div>
+          <div style="height:26px;display:flex;align-items:center;justify-content:center;flex:none"><div style="width:128px;height:5px;border-radius:3px;background:rgba(38,48,42,.22)"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="12" style="display:flex;flex-direction:column;gap:11px;flex:none;scroll-margin:90px">
+      <div style="display:flex;align-items:baseline;gap:8px;padding-left:6px">
+        <a href="#12" style="font-family:var(--font-num);font-weight:800;font-size:12px;color:var(--g-700);background:var(--g-100);padding:3px 8px;border-radius:6px;text-decoration:none">12</a>
+        <span style="font-size:13px;font-weight:500;color:var(--ink-2)">高能日 · 150 分钟 · 多科并进</span>
+      </div>
+      <div style="width:380px;background:linear-gradient(158deg,#22322b,#12201a);border-radius:46px;padding:12px;box-shadow:var(--shadow-phone);flex:none">
+        <div style="position:relative;width:356px;min-height:762px;background:var(--paper);border-radius:36px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:52px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;flex:none;position:relative;z-index:5">
+            <span style="font-family:var(--font-num);font-weight:700;font-size:15px;color:var(--ink)">7:05</span>
+            <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:104px;height:30px;background:#0e1a14;border-radius:16px"></div>
+            <svg width="66" height="14" viewBox="0 0 66 14" fill="none"><rect x="0" y="7" width="3" height="7" rx="1" fill="var(--ink)"/><rect x="5" y="5" width="3" height="9" rx="1" fill="var(--ink)"/><rect x="10" y="3" width="3" height="11" rx="1" fill="var(--ink)"/><rect x="15" y="1" width="3" height="13" rx="1" fill="var(--ink)"/><path d="M27 4.6c3-2.6 8-2.6 11 0M29.2 7.6c2-1.7 4.6-1.7 6.6 0M31.7 10.5c.9-.8 1.9-.8 2.8 0" stroke="var(--ink)" stroke-width="1.3" stroke-linecap="round"/><rect x="46" y="2.6" width="17" height="9" rx="2.6" stroke="var(--ink)" stroke-width="1.1"/><rect x="47.6" y="4.1" width="12" height="6" rx="1.2" fill="var(--g-500)"/><rect x="64" y="5" width="1.7" height="4" rx=".8" fill="var(--ink)"/></svg>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;padding:18px 20px 8px;gap:15px">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <span style="font-size:13px;color:var(--ink-3)">6 月 16 日 · 今日计划</span>
+                <div style="display:flex;align-items:baseline;gap:7px"><span style="font-family:var(--font-num);font-weight:800;font-size:28px;color:var(--ink);line-height:1">150</span><span style="font-size:14px;color:var(--ink-2)">分钟 · 4 件事</span></div>
+              </div>
+              <span style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#8a6420;background:var(--amber-bg);padding:7px 12px;border-radius:999px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M13 2L5 13h5l-1 9 9-12h-5l1-8Z" fill="var(--amber)"/></svg>高能</span>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px 15px;box-shadow:var(--shadow-card)">
+                <div style="width:27px;height:27px;border-radius:9px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:800;font-size:14px;color:var(--ink-3);flex:none">1</div>
+                <div style="display:flex;flex-direction:column;gap:5px;flex:1">
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px;font-weight:700;color:var(--ink)">线代</span><span style="font-family:var(--font-num);font-weight:700;font-size:13px;color:var(--g-700);background:var(--g-50);padding:3px 9px;border-radius:8px">55<span style="font-size:10px;font-weight:600"> min</span></span></div>
+                  <div style="display:flex;align-items:center;gap:7px"><span style="font-size:13px;color:var(--ink-2)">刷题 15 题（接昨天）</span><span style="font-size:10.5px;font-weight:600;color:#8a6420;background:var(--amber-bg);padding:2px 7px;border-radius:6px">落后节奏</span></div>
+                </div>
+                <div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--hairline);flex:none"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px 15px;box-shadow:var(--shadow-card)">
+                <div style="width:27px;height:27px;border-radius:9px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:800;font-size:14px;color:var(--ink-3);flex:none">2</div>
+                <div style="display:flex;flex-direction:column;gap:5px;flex:1">
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px;font-weight:700;color:var(--ink)">高数</span><span style="font-family:var(--font-num);font-weight:700;font-size:13px;color:var(--g-700);background:var(--g-50);padding:3px 9px;border-radius:8px">50<span style="font-size:10px;font-weight:600"> min</span></span></div>
+                  <div style="display:flex;align-items:center;gap:7px"><span style="font-size:13px;color:var(--ink-2)">第 4 章 · 推进 0.5 章</span></div>
+                </div>
+                <div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--hairline);flex:none"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px 15px;box-shadow:var(--shadow-card)">
+                <div style="width:27px;height:27px;border-radius:9px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:800;font-size:14px;color:var(--ink-3);flex:none">3</div>
+                <div style="display:flex;flex-direction:column;gap:5px;flex:1">
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px;font-weight:700;color:var(--ink)">项目</span><span style="font-family:var(--font-num);font-weight:700;font-size:13px;color:var(--g-700);background:var(--g-50);padding:3px 9px;border-radius:8px">30<span style="font-size:10px;font-weight:600"> min</span></span></div>
+                  <div style="display:flex;align-items:center;gap:7px"><span style="font-size:13px;color:var(--ink-2)">课程作业推进</span><span style="display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;color:#8a6420;background:var(--amber-bg);padding:2px 7px;border-radius:6px"><span style="width:5px;height:5px;border-radius:50%;background:var(--amber)"></span>截止 6/25</span></div>
+                </div>
+                <div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--hairline);flex:none"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:13px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px 15px;box-shadow:var(--shadow-card)">
+                <div style="width:27px;height:27px;border-radius:9px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:800;font-size:14px;color:var(--ink-3);flex:none">4</div>
+                <div style="display:flex;flex-direction:column;gap:5px;flex:1">
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px;font-weight:700;color:var(--ink)">英语</span><span style="font-family:var(--font-num);font-weight:700;font-size:13px;color:var(--g-700);background:var(--g-50);padding:3px 9px;border-radius:8px">15<span style="font-size:10px;font-weight:600"> min</span></span></div>
+                  <div style="display:flex;align-items:center;gap:7px"><span style="font-size:13px;color:var(--ink-2)">英语阅读</span><span style="font-size:10.5px;font-weight:600;color:#436670;background:var(--slate-bg);padding:2px 7px;border-radius:6px">每日</span></div>
+                </div>
+                <div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--hairline);flex:none"></div>
+              </div>
+            </div>
+
+            <div style="background:linear-gradient(160deg,var(--g-50),#e5f0e8);border:1px solid var(--g-100);border-radius:var(--r-card);padding:17px 17px 18px;display:flex;flex-direction:column;gap:11px">
+              <div style="display:flex;align-items:center;gap:9px">
+                <div style="width:30px;height:30px;border-radius:10px;background:var(--g-100);display:flex;align-items:center;justify-content:center;flex:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M11.5 20.5C7 20.5 4.2 17.2 4.2 12.6C4.2 7.4 8.2 4 19.3 3.6C19.3 13.8 15.7 20.5 11.5 20.5Z" fill="var(--g-300)" stroke="var(--g-700)" stroke-width="1.4" stroke-linejoin="round"/><path d="M11.5 20.5C11.5 15 13.4 9.4 18 5.6" stroke="var(--g-700)" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+                <span style="font-size:13px;font-weight:700;color:var(--g-700);letter-spacing:.3px">系统为什么这么排</span>
+              </div>
+              <p style="margin:0;font-size:15.5px;line-height:1.78;color:var(--g-800)">高能日，预算 <b style="font-weight:700">150 分钟</b>，安排 4 项。线代落后节奏 <b style="font-weight:700">27%</b>、压力最高，多分到 55 分钟；高数推进 <b style="font-weight:700">0.5 章</b>（基准 0.23 章 = 剩 2.5 章 ÷ 11 天，高能日加倍）；项目 6/25 截止，保持推进；英语照常。单科上限 90 分钟，不透支。</p>
+            </div>
+
+            <div style="flex:1"></div>
+
+            <button style="appearance:none;cursor:pointer;width:100%;height:50px;border-radius:var(--r-pill);background:var(--surface);border:1.5px solid var(--hairline);color:var(--ink-2);font-family:var(--font-cn);font-size:14.5px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:9px" style-hover="border-color:var(--slate);color:#436670">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+              用一个灵活休息日
+              <span style="font-family:var(--font-num);font-weight:700;font-size:11.5px;color:#436670;background:var(--slate-bg);padding:3px 9px;border-radius:999px">灵活休息 2/2</span>
+            </button>
+            <p style="margin:0 0 6px;text-align:center;font-size:12px;color:var(--ink-3)">晚上回来花一分钟汇报，明早接着今天重排</p>
+          </div>
+          <div style="height:26px;display:flex;align-items:center;justify-content:center;flex:none"><div style="width:128px;height:5px;border-radius:3px;background:rgba(38,48,42,.22)"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="secE" style="width:1220px;max-width:1220px;margin:0 auto;padding:34px 0 8px">
+  <div style="display:flex;align-items:center;gap:12px;margin:0 0 8px;padding:0 4px">
+    <a href="#secE" style="font-family:var(--font-num);font-weight:800;font-size:13px;color:#fff;background:var(--g-600);padding:5px 11px;border-radius:8px;text-decoration:none;letter-spacing:.3px">E</a>
+    <span style="font-weight:700;font-size:17px;color:var(--ink)">早晨 · 休息日</span>
+    <span style="font-size:13px;color:var(--ink-3)">无任务，但系统不断线 —— 从不惩罚</span>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start">
+
+    <div id="06" style="display:flex;flex-direction:column;gap:11px;flex:none;scroll-margin:90px">
+      <div style="display:flex;align-items:baseline;gap:8px;padding-left:6px">
+        <a href="#06" style="font-family:var(--font-num);font-weight:800;font-size:12px;color:var(--g-700);background:var(--g-100);padding:3px 8px;border-radius:6px;text-decoration:none">06</a>
+        <span style="font-size:13px;font-weight:500;color:var(--ink-2)">节奏休息日 · 计划内</span>
+      </div>
+      <div style="width:380px;background:linear-gradient(158deg,#22322b,#12201a);border-radius:46px;padding:12px;box-shadow:var(--shadow-phone);flex:none">
+        <div style="position:relative;width:356px;min-height:762px;background:linear-gradient(180deg,#faf6ee,#f2ead9);border-radius:36px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:52px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;flex:none;position:relative;z-index:5">
+            <span style="font-family:var(--font-num);font-weight:700;font-size:15px;color:var(--ink)">8:40</span>
+            <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:104px;height:30px;background:#0e1a14;border-radius:16px"></div>
+            <svg width="66" height="14" viewBox="0 0 66 14" fill="none"><rect x="0" y="7" width="3" height="7" rx="1" fill="var(--ink)"/><rect x="5" y="5" width="3" height="9" rx="1" fill="var(--ink)"/><rect x="10" y="3" width="3" height="11" rx="1" fill="var(--ink)"/><rect x="15" y="1" width="3" height="13" rx="1" fill="var(--ink)"/><path d="M27 4.6c3-2.6 8-2.6 11 0M29.2 7.6c2-1.7 4.6-1.7 6.6 0M31.7 10.5c.9-.8 1.9-.8 2.8 0" stroke="var(--ink)" stroke-width="1.3" stroke-linecap="round"/><rect x="46" y="2.6" width="17" height="9" rx="2.6" stroke="var(--ink)" stroke-width="1.1"/><rect x="47.6" y="4.1" width="12" height="6" rx="1.2" fill="var(--g-500)"/><rect x="64" y="5" width="1.7" height="4" rx=".8" fill="var(--ink)"/></svg>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;padding:16px 20px 8px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#7a6034;background:#f6eeddcc;border:1px solid #e6dac6;padding:7px 13px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:var(--clay)"></span>节奏休息日</span>
+              <span style="font-size:13px;color:#9a8865">6 月 14 日 · 周日</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px;padding:10px 4px">
+              <div style="width:112px;height:112px;border-radius:50%;background:radial-gradient(circle at 50% 38%,#f0e2c8,#e7d6b6);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px #e6d5b4,0 14px 30px -14px rgba(150,120,70,.5);animation:plosFloat 6s ease-in-out infinite">
+                <svg width="52" height="52" viewBox="0 0 24 24" fill="none"><path d="M4.5 9.5h12v4a5 5 0 01-5 5H9.5a5 5 0 01-5-5v-4Z" fill="none" stroke="var(--clay)" stroke-width="1.5" stroke-linejoin="round"/><path d="M16.5 10.5h2a2.5 2.5 0 010 5h-2" stroke="var(--clay)" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 3.5c-.6 1 .6 1.8 0 2.8M11.5 3.2c-.6 1 .6 1.8 0 2.8" stroke="var(--clay)" stroke-width="1.4" stroke-linecap="round"/></svg>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:11px">
+                <h1 style="margin:0;font-size:23px;font-weight:700;color:#5a4a2e;letter-spacing:-.2px">今天是计划内的休息日</h1>
+                <p style="margin:0;font-size:15px;line-height:1.75;color:#8a7550;max-width:266px">系统按你的节奏（学 5 休 2）安排了今天休息。什么都不用做。</p>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:6px">
+              <div style="background:var(--surface);border:1px solid #ece0cc;border-radius:var(--r-card);padding:15px 16px;display:flex;align-items:center;gap:13px;box-shadow:var(--shadow-card)">
+                <div style="width:44px;height:44px;border-radius:13px;background:var(--g-50);display:flex;align-items:center;justify-content:center;flex:none"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M11.5 20.5C7 20.5 4.2 17.2 4.2 12.6C4.2 7.4 8.2 4 19.3 3.6C19.3 13.8 15.7 20.5 11.5 20.5Z" fill="var(--g-300)" stroke="var(--g-700)" stroke-width="1.4" stroke-linejoin="round"/><path d="M11.5 20.5C11.5 15 13.4 9.4 18 5.6" stroke="var(--g-700)" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+                <div style="display:flex;flex-direction:column;gap:2px;flex:1">
+                  <span style="font-size:12.5px;color:var(--ink-3)">系统仍在运行</span>
+                  <div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:var(--font-num);font-weight:800;font-size:23px;color:var(--g-700);line-height:1">第 14 天</span><span style="font-size:13px;color:var(--ink-2)">连续</span></div>
+                </div>
+                <span style="width:9px;height:9px;border-radius:50%;background:var(--g-500);animation:plosBreathe 2.4s ease-in-out infinite;flex:none"></span>
+              </div>
+              <p style="margin:0;text-align:center;font-size:12.5px;color:#9a8865">明天回到学习日 —— 接着上次的线代继续。</p>
+            </div>
+          </div>
+          <div style="height:26px;display:flex;align-items:center;justify-content:center;flex:none"><div style="width:128px;height:5px;border-radius:3px;background:rgba(90,74,46,.22)"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="07" style="display:flex;flex-direction:column;gap:11px;flex:none;scroll-margin:90px">
+      <div style="display:flex;align-items:baseline;gap:8px;padding-left:6px">
+        <a href="#07" style="font-family:var(--font-num);font-weight:800;font-size:12px;color:var(--g-700);background:var(--g-100);padding:3px 8px;border-radius:6px;text-decoration:none">07</a>
+        <span style="font-size:13px;font-weight:500;color:var(--ink-2)">灵活休息日 · 额度 −1（学习日点转来）</span>
+      </div>
+      <div style="width:380px;background:linear-gradient(158deg,#22322b,#12201a);border-radius:46px;padding:12px;box-shadow:var(--shadow-phone);flex:none">
+        <div style="position:relative;width:356px;min-height:762px;background:linear-gradient(180deg,#f4f8f8,#e8f0f1);border-radius:36px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:52px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;flex:none;position:relative;z-index:5">
+            <span style="font-family:var(--font-num);font-weight:700;font-size:15px;color:var(--ink)">9:02</span>
+            <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:104px;height:30px;background:#0e1a14;border-radius:16px"></div>
+            <svg width="66" height="14" viewBox="0 0 66 14" fill="none"><rect x="0" y="7" width="3" height="7" rx="1" fill="var(--ink)"/><rect x="5" y="5" width="3" height="9" rx="1" fill="var(--ink)"/><rect x="10" y="3" width="3" height="11" rx="1" fill="var(--ink)"/><rect x="15" y="1" width="3" height="13" rx="1" fill="var(--ink)"/><path d="M27 4.6c3-2.6 8-2.6 11 0M29.2 7.6c2-1.7 4.6-1.7 6.6 0M31.7 10.5c.9-.8 1.9-.8 2.8 0" stroke="var(--ink)" stroke-width="1.3" stroke-linecap="round"/><rect x="46" y="2.6" width="17" height="9" rx="2.6" stroke="var(--ink)" stroke-width="1.1"/><rect x="47.6" y="4.1" width="12" height="6" rx="1.2" fill="var(--g-500)"/><rect x="64" y="5" width="1.7" height="4" rx=".8" fill="var(--ink)"/></svg>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;padding:16px 20px 8px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#436670;background:#e2eff0cc;border:1px solid #d3e3e5;padding:7px 13px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:var(--slate)"></span>灵活休息日</span>
+              <span style="font-size:13px;color:#6f8f97">6 月 15 日 · 周一</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px;padding:10px 4px">
+              <div style="width:112px;height:112px;border-radius:50%;background:radial-gradient(circle at 50% 38%,#dcecee,#cfe3e5);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px #cfe3e5,0 14px 30px -14px rgba(70,120,130,.45);animation:plosFloat 6s ease-in-out infinite">
+                <svg width="50" height="50" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5Z" fill="none" stroke="var(--slate)" stroke-width="1.5" stroke-linejoin="round"/><path d="M17 3.5l.6 1.6 1.6.6-1.6.6-.6 1.6-.6-1.6-1.6-.6 1.6-.6.6-1.6Z" fill="var(--slate)"/></svg>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:11px">
+                <h1 style="margin:0;font-size:23px;font-weight:700;color:#37545c;letter-spacing:-.2px">今天先歇一下</h1>
+                <p style="margin:0;font-size:15px;line-height:1.75;color:#5c7c84;max-width:270px">你用了一个灵活休息日，今天转为休息。这不是脱轨 —— 是系统给你留的余地。</p>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:6px">
+              <div style="background:var(--surface);border:1px solid #d3e3e5;border-radius:var(--r-card);padding:14px 16px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow-card)">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <span style="font-size:13px;color:var(--ink-2)">灵活休息额度</span>
+                  <div style="display:flex;align-items:center;gap:6px">
+                    <span style="width:22px;height:10px;border-radius:999px;background:var(--slate)"></span>
+                    <span style="width:22px;height:10px;border-radius:999px;background:none;border:1.5px dashed #b9cfd3"></span>
+                    <span style="font-family:var(--font-num);font-weight:700;font-size:13px;color:#436670;margin-left:4px">剩 1 / 2</span>
+                  </div>
+                </div>
+                <div style="height:1px;background:var(--hairline)"></div>
+                <div style="display:flex;align-items:center;gap:13px">
+                  <div style="width:40px;height:40px;border-radius:12px;background:var(--g-50);display:flex;align-items:center;justify-content:center;flex:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M11.5 20.5C7 20.5 4.2 17.2 4.2 12.6C4.2 7.4 8.2 4 19.3 3.6C19.3 13.8 15.7 20.5 11.5 20.5Z" fill="var(--g-300)" stroke="var(--g-700)" stroke-width="1.4" stroke-linejoin="round"/><path d="M11.5 20.5C11.5 15 13.4 9.4 18 5.6" stroke="var(--g-700)" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+                  <div style="display:flex;flex-direction:column;gap:2px;flex:1"><span style="font-size:12.5px;color:var(--ink-3)">系统仍在运行</span><div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:var(--font-num);font-weight:800;font-size:20px;color:var(--g-700);line-height:1">第 15 天</span><span style="font-size:12.5px;color:var(--ink-2)">连续 · 今天也算</span></div></div>
+                  <span style="width:9px;height:9px;border-radius:50%;background:var(--g-500);animation:plosBreathe 2.4s ease-in-out infinite;flex:none"></span>
+                </div>
+              </div>
+              <button style="appearance:none;cursor:pointer;background:none;border:none;text-align:center;font-family:var(--font-cn);font-size:12.5px;color:#6f8f97;padding:2px" style-hover="color:#37545c">点错了？<b style="font-weight:700;text-decoration:underline;text-underline-offset:2px">撤销</b>，回到学习日</button>
+            </div>
+          </div>
+          <div style="height:26px;display:flex;align-items:center;justify-content:center;flex:none"><div style="width:128px;height:5px;border-radius:3px;background:rgba(55,84,92,.22)"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="secF" style="width:1220px;max-width:1220px;margin:0 auto;padding:34px 0 8px">
+  <div style="display:flex;align-items:center;gap:12px;margin:0 0 22px;padding:0 4px">
+    <a href="#secF" style="font-family:var(--font-num);font-weight:800;font-size:13px;color:#fff;background:var(--g-600);padding:5px 11px;border-radius:8px;text-decoration:none;letter-spacing:.3px">F</a>
+    <span style="font-weight:700;font-size:17px;color:var(--ink)">白天 · 计划视图（主屏）</span>
+    <span style="font-size:13px;color:var(--ink-3)">低启动成本 · &lt;1 分钟扫完今天干什么</span>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start">
+
+    <div id="08" style="display:flex;flex-direction:column;gap:11px;flex:none;scroll-margin:90px">
+      <div style="display:flex;align-items:baseline;gap:8px;padding-left:6px">
+        <a href="#08" style="font-family:var(--font-num);font-weight:800;font-size:12px;color:var(--g-700);background:var(--g-100);padding:3px 8px;border-radius:6px;text-decoration:none">08</a>
+        <span style="font-size:13px;font-weight:500;color:var(--ink-2)">计划视图 · 今日条目 + 浓缩 reasoning + 月进度</span>
+      </div>
+      <div style="width:380px;background:linear-gradient(158deg,#22322b,#12201a);border-radius:46px;padding:12px;box-shadow:var(--shadow-phone);flex:none">
+        <div style="position:relative;width:356px;min-height:762px;background:var(--paper);border-radius:36px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:52px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;flex:none;position:relative;z-index:5">
+            <span style="font-family:var(--font-num);font-weight:700;font-size:15px;color:var(--ink)">13:26</span>
+            <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:104px;height:30px;background:#0e1a14;border-radius:16px"></div>
+            <svg width="66" height="14" viewBox="0 0 66 14" fill="none"><rect x="0" y="7" width="3" height="7" rx="1" fill="var(--ink)"/><rect x="5" y="5" width="3" height="9" rx="1" fill="var(--ink)"/><rect x="10" y="3" width="3" height="11" rx="1" fill="var(--ink)"/><rect x="15" y="1" width="3" height="13" rx="1" fill="var(--ink)"/><path d="M27 4.6c3-2.6 8-2.6 11 0M29.2 7.6c2-1.7 4.6-1.7 6.6 0M31.7 10.5c.9-.8 1.9-.8 2.8 0" stroke="var(--ink)" stroke-width="1.3" stroke-linecap="round"/><rect x="46" y="2.6" width="17" height="9" rx="2.6" stroke="var(--ink)" stroke-width="1.1"/><rect x="47.6" y="4.1" width="12" height="6" rx="1.2" fill="var(--g-500)"/><rect x="64" y="5" width="1.7" height="4" rx=".8" fill="var(--ink)"/></svg>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;padding:16px 20px 8px;gap:16px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--g-700);background:var(--g-50);border:1px solid var(--g-100);padding:6px 11px;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:var(--g-500)"></span>学习日</span>
+                <span style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#4f5399;background:var(--peri-bg);padding:6px 10px;border-radius:999px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5Z" fill="var(--peri)"/></svg>低谷</span>
+              </div>
+              <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--g-700);background:var(--g-50);border:1px solid var(--g-100);padding:6px 10px;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:var(--g-500);animation:plosBreathe 2.4s ease-in-out infinite"></span>12 天</span>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;padding:0 2px">
+                <span style="font-size:15px;font-weight:700;color:var(--ink)">今天 · 2 件事</span>
+                <span style="font-size:12.5px;color:var(--ink-3)">已完成 <b style="font-family:var(--font-num);color:var(--g-600)">67%</b></span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-md);padding:12px 13px;box-shadow:var(--shadow-card)">
+                <div style="width:24px;height:24px;border-radius:50%;background:var(--g-500);display:flex;align-items:center;justify-content:center;flex:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                <span style="font-size:15px;font-weight:700;color:var(--ink);flex:1">线代</span>
+                <span style="font-family:var(--font-num);font-weight:600;font-size:12.5px;color:var(--ink-3)">30 min</span>
+                <span style="font-size:11px;font-weight:600;color:var(--g-600);background:var(--g-50);padding:3px 9px;border-radius:999px">完成</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-md);padding:12px 13px;box-shadow:var(--shadow-card)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="flex:none"><circle cx="12" cy="12" r="10" stroke="var(--slate)" stroke-width="2"/><path d="M12 12V6" stroke="var(--slate)" stroke-width="2" stroke-linecap="round"/><path d="M12 12l4 2.5" stroke="var(--slate)" stroke-width="2" stroke-linecap="round"/></svg>
+                <span style="font-size:15px;font-weight:700;color:var(--ink);flex:1">英语</span>
+                <span style="font-family:var(--font-num);font-weight:600;font-size:12.5px;color:var(--ink-3)">15 min</span>
+                <span style="font-size:11px;font-weight:600;color:#436670;background:var(--slate-bg);padding:3px 9px;border-radius:999px">进行中</span>
+              </div>
+            </div>
+
+            <div style="background:var(--g-50);border:1px solid var(--g-100);border-radius:var(--r-lg);padding:13px 14px;display:flex;align-items:center;gap:11px">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex:none"><path d="M11.5 20.5C7 20.5 4.2 17.2 4.2 12.6C4.2 7.4 8.2 4 19.3 3.6C19.3 13.8 15.7 20.5 11.5 20.5Z" fill="var(--g-300)" stroke="var(--g-700)" stroke-width="1.4" stroke-linejoin="round"/><path d="M11.5 20.5C11.5 15 13.4 9.4 18 5.6" stroke="var(--g-700)" stroke-width="1.4" stroke-linecap="round"/></svg>
+              <p style="margin:0;font-size:13.5px;line-height:1.5;color:var(--g-800);flex:1">低谷日，只保线代和英语，<b style="font-weight:700">预算 45 分钟</b>。</p>
+              <span style="font-size:12px;font-weight:600;color:var(--g-600);white-space:nowrap">展开 ›</span>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:13px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:15px 15px 16px;box-shadow:var(--shadow-card)">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="font-size:13.5px;font-weight:700;color:var(--ink-2)">本月进度</span>
+                <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-3)"><span style="width:2px;height:11px;background:var(--g-700);border-radius:2px"></span>达标线</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:11px"><span style="font-size:13px;color:var(--ink-2);width:34px">高数</span><div style="position:relative;height:8px;border-radius:999px;background:var(--surface-2);flex:1"><div style="position:absolute;left:0;top:0;bottom:0;width:62%;border-radius:999px;background:var(--g-400)"></div><div style="position:absolute;left:80%;top:-2px;bottom:-2px;width:2px;border-radius:2px;background:var(--g-700)"></div></div><span style="font-family:var(--font-num);font-weight:700;font-size:12px;color:var(--ink-2);width:34px;text-align:right">62%</span></div>
+              <div style="display:flex;align-items:center;gap:11px"><span style="font-size:13px;color:var(--ink-2);width:34px">英语</span><div style="position:relative;height:8px;border-radius:999px;background:var(--surface-2);flex:1"><div style="position:absolute;left:0;top:0;bottom:0;width:86%;border-radius:999px;background:var(--g-500)"></div><div style="position:absolute;left:70%;top:-2px;bottom:-2px;width:2px;border-radius:2px;background:var(--g-700)"></div></div><span style="display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--g-600);width:52px;justify-content:flex-end"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="var(--g-600)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>达标</span></div>
+              <div style="display:flex;align-items:center;gap:11px"><span style="font-size:13px;color:var(--ink-2);width:34px">线代</span><div style="position:relative;height:8px;border-radius:999px;background:var(--surface-2);flex:1"><div style="position:absolute;left:0;top:0;bottom:0;width:48%;border-radius:999px;background:var(--g-300)"></div><div style="position:absolute;left:80%;top:-2px;bottom:-2px;width:2px;border-radius:2px;background:var(--g-700)"></div></div><span style="font-family:var(--font-num);font-weight:700;font-size:12px;color:var(--ink-2);width:34px;text-align:right">48%</span></div>
+              <div style="display:flex;align-items:center;gap:11px"><span style="font-size:13px;color:var(--ink-2);width:34px">项目</span><div style="position:relative;height:8px;border-radius:999px;background:var(--surface-2);flex:1"><div style="position:absolute;left:0;top:0;bottom:0;width:70%;border-radius:999px;background:var(--g-400)"></div></div><span style="font-family:var(--font-num);font-weight:700;font-size:11px;color:#8a6420;width:52px;text-align:right">截止6/25</span></div>
+            </div>
+
+            <div style="flex:1"></div>
+            <button style="appearance:none;border:none;cursor:pointer;width:100%;height:50px;border-radius:var(--r-pill);background:var(--g-500);color:#fff;font-family:var(--font-cn);font-size:15px;font-weight:700;box-shadow:0 10px 20px -8px rgba(78,130,98,.6);display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:2px" style-hover="background:var(--g-600)">晚间汇报</button>
+          </div>
+          <div style="height:26px;display:flex;align-items:center;justify-content:center;flex:none"><div style="width:128px;height:5px;border-radius:3px;background:rgba(38,48,42,.22)"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="secG" style="width:1220px;max-width:1220px;margin:0 auto;padding:34px 0 8px">
+  <div style="display:flex;align-items:center;gap:12px;margin:0 0 22px;padding:0 4px">
+    <a href="#secG" style="font-family:var(--font-num);font-weight:800;font-size:13px;color:#fff;background:var(--g-600);padding:5px 11px;border-radius:8px;text-decoration:none;letter-spacing:.3px">G</a>
+    <span style="font-weight:700;font-size:17px;color:var(--ink)">晚间汇报</span>
+    <span style="font-size:13px;color:var(--ink-3)">要快、低摩擦 · 滑块 + 一句话 · 即使全 0% 也不惩罚</span>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start">
+
+    <div id="09" style="display:flex;flex-direction:column;gap:11px;flex:none;scroll-margin:90px">
+      <div style="display:flex;align-items:baseline;gap:8px;padding-left:6px">
+        <a href="#09" style="font-family:var(--font-num);font-weight:800;font-size:12px;color:var(--g-700);background:var(--g-100);padding:3px 8px;border-radius:6px;text-decoration:none">09</a>
+        <span style="font-size:13px;font-weight:500;color:var(--ink-2)">滑块汇报 · 线代 80% / 英语 完成</span>
+      </div>
+      <div style="width:380px;background:linear-gradient(158deg,#22322b,#12201a);border-radius:46px;padding:12px;box-shadow:var(--shadow-phone);flex:none">
+        <div style="position:relative;width:356px;min-height:762px;background:var(--paper);border-radius:36px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:52px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;flex:none;position:relative;z-index:5">
+            <span style="font-family:var(--font-num);font-weight:700;font-size:15px;color:var(--ink)">22:41</span>
+            <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:104px;height:30px;background:#0e1a14;border-radius:16px"></div>
+            <svg width="66" height="14" viewBox="0 0 66 14" fill="none"><rect x="0" y="7" width="3" height="7" rx="1" fill="var(--ink)"/><rect x="5" y="5" width="3" height="9" rx="1" fill="var(--ink)"/><rect x="10" y="3" width="3" height="11" rx="1" fill="var(--ink)"/><rect x="15" y="1" width="3" height="13" rx="1" fill="var(--ink)"/><path d="M27 4.6c3-2.6 8-2.6 11 0M29.2 7.6c2-1.7 4.6-1.7 6.6 0M31.7 10.5c.9-.8 1.9-.8 2.8 0" stroke="var(--ink)" stroke-width="1.3" stroke-linecap="round"/><rect x="46" y="2.6" width="17" height="9" rx="2.6" stroke="var(--ink)" stroke-width="1.1"/><rect x="47.6" y="4.1" width="12" height="6" rx="1.2" fill="var(--g-500)"/><rect x="64" y="5" width="1.7" height="4" rx=".8" fill="var(--ink)"/></svg>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;padding:18px 20px 8px;gap:18px">
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <span style="font-size:13px;color:var(--ink-3)">6 月 12 日 · 睡前一分钟</span>
+              <h1 style="margin:0;font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.2px">今天做得怎么样？</h1>
+              <span style="font-size:13px;color:var(--ink-2)">拖动滑块就好，不用打字。</span>
+            </div>
+
+            <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:15px 16px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:13px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:16px;font-weight:700;color:var(--ink)">线代</span><span style="font-size:12px;color:var(--ink-3)">目标 30 min</span></div>
+                <span style="font-family:var(--font-num);font-weight:800;font-size:20px;color:var(--g-700)">24<span style="font-size:12px;font-weight:700"> min</span></span>
+              </div>
+              <div style="position:relative;height:10px;border-radius:999px;background:var(--surface-2);margin:6px 0">
+                <div style="position:absolute;left:0;top:0;bottom:0;width:80%;border-radius:999px;background:var(--g-500)"></div>
+                <div style="position:absolute;left:80%;top:50%;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--g-500);box-shadow:0 3px 8px rgba(38,58,44,.25)"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;background:var(--surface-2);border-radius:var(--r-md);padding:10px 12px">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="flex:none"><path d="M4 20h4l10-10-4-4L4 16v4Z" stroke="var(--ink-3)" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                <span style="font-size:13px;color:var(--ink-2)">只刷了 20 题</span>
+              </div>
+            </div>
+
+            <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:15px 16px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:13px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:16px;font-weight:700;color:var(--ink)">英语</span><span style="font-size:12px;color:var(--ink-3)">目标 15 min</span></div>
+                <span style="display:inline-flex;align-items:center;gap:5px;font-family:var(--font-num);font-weight:700;font-size:14px;color:var(--g-600)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="var(--g-600)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>完成</span>
+              </div>
+              <div style="position:relative;height:10px;border-radius:999px;background:var(--surface-2);margin:6px 0">
+                <div style="position:absolute;left:0;top:0;bottom:0;width:100%;border-radius:999px;background:var(--g-500)"></div>
+                <div style="position:absolute;left:calc(100% - 13px);top:50%;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--g-500);box-shadow:0 3px 8px rgba(38,58,44,.25)"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;background:var(--surface-2);border-radius:var(--r-md);padding:10px 12px">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="flex:none"><path d="M4 20h4l10-10-4-4L4 16v4Z" stroke="var(--ink-3)" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                <span style="font-size:13px;color:var(--ink-3)">个人备忘（可选 · 仅记录，不影响明天计划）</span>
+              </div>
+            </div>
+
+            <div style="flex:1"></div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <button style="appearance:none;border:none;cursor:pointer;width:100%;height:54px;border-radius:var(--r-pill);background:var(--g-500);color:#fff;font-family:var(--font-cn);font-size:16px;font-weight:700;box-shadow:0 10px 20px -7px rgba(78,130,98,.6)" style-hover="background:var(--g-600)">保存 · 今天结束</button>
+              <p style="margin:0 0 6px;text-align:center;font-size:12px;color:var(--ink-3)">明早系统会接着今天，重新排</p>
+            </div>
+          </div>
+          <div style="height:26px;display:flex;align-items:center;justify-content:center;flex:none"><div style="width:128px;height:5px;border-radius:3px;background:rgba(38,48,42,.22)"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="10" style="display:flex;flex-direction:column;gap:11px;flex:none;scroll-margin:90px">
+      <div style="display:flex;align-items:baseline;gap:8px;padding-left:6px">
+        <a href="#10" style="font-family:var(--font-num);font-weight:800;font-size:12px;color:var(--g-700);background:var(--g-100);padding:3px 8px;border-radius:6px;text-decoration:none">10</a>
+        <span style="font-size:13px;font-weight:500;color:var(--ink-2)">全 0% · 非惩罚态 · systemRan 仍 +1</span>
+      </div>
+      <div style="width:380px;background:linear-gradient(158deg,#22322b,#12201a);border-radius:46px;padding:12px;box-shadow:var(--shadow-phone);flex:none">
+        <div style="position:relative;width:356px;min-height:762px;background:var(--paper);border-radius:36px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:52px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;flex:none;position:relative;z-index:5">
+            <span style="font-family:var(--font-num);font-weight:700;font-size:15px;color:var(--ink)">23:58</span>
+            <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:104px;height:30px;background:#0e1a14;border-radius:16px"></div>
+            <svg width="66" height="14" viewBox="0 0 66 14" fill="none"><rect x="0" y="7" width="3" height="7" rx="1" fill="var(--ink)"/><rect x="5" y="5" width="3" height="9" rx="1" fill="var(--ink)"/><rect x="10" y="3" width="3" height="11" rx="1" fill="var(--ink)"/><rect x="15" y="1" width="3" height="13" rx="1" fill="var(--ink)"/><path d="M27 4.6c3-2.6 8-2.6 11 0M29.2 7.6c2-1.7 4.6-1.7 6.6 0M31.7 10.5c.9-.8 1.9-.8 2.8 0" stroke="var(--ink)" stroke-width="1.3" stroke-linecap="round"/><rect x="46" y="2.6" width="17" height="9" rx="2.6" stroke="var(--ink)" stroke-width="1.1"/><rect x="47.6" y="4.1" width="12" height="6" rx="1.2" fill="var(--g-500)"/><rect x="64" y="5" width="1.7" height="4" rx=".8" fill="var(--ink)"/></svg>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;padding:18px 20px 8px;gap:16px">
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <span style="font-size:13px;color:var(--ink-3)">6 月 22 日 · 睡前</span>
+              <h1 style="margin:0;font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.2px">今天没推进也没关系</h1>
+            </div>
+
+            <div style="background:linear-gradient(160deg,var(--g-50),#e6f1e9);border:1px solid var(--g-100);border-radius:var(--r-lg);padding:14px 15px;display:flex;gap:11px;align-items:flex-start">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" style="flex:none;margin-top:1px"><path d="M11.5 20.5C7 20.5 4.2 17.2 4.2 12.6C4.2 7.4 8.2 4 19.3 3.6C19.3 13.8 15.7 20.5 11.5 20.5Z" fill="var(--g-300)" stroke="var(--g-700)" stroke-width="1.4" stroke-linejoin="round"/><path d="M11.5 20.5C11.5 15 13.4 9.4 18 5.6" stroke="var(--g-700)" stroke-width="1.4" stroke-linecap="round"/></svg>
+              <p style="margin:0;font-size:13.5px;line-height:1.65;color:var(--g-800)">系统不会断。保存后，今天<b style="font-weight:700">仍然算运行的一天</b>。明天照常生成，接着往前走。</p>
+            </div>
+
+            <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px 16px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:11px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:16px;font-weight:700;color:var(--ink)">线代</span><span style="font-size:12px;color:var(--ink-3)">目标 30 min</span></div>
+                <span style="font-family:var(--font-num);font-weight:800;font-size:19px;color:var(--ink-3)">0<span style="font-size:12px;font-weight:700"> min</span></span>
+              </div>
+              <div style="position:relative;height:10px;border-radius:999px;background:var(--surface-2);margin:4px 0">
+                <div style="position:absolute;left:13px;top:50%;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--ink-3);box-shadow:0 3px 8px rgba(38,58,44,.2)"></div>
+              </div>
+            </div>
+
+            <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px 16px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:11px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:16px;font-weight:700;color:var(--ink)">英语</span><span style="font-size:12px;color:var(--ink-3)">目标 15 min</span></div>
+                <span style="font-family:var(--font-num);font-weight:800;font-size:19px;color:var(--ink-3)">0<span style="font-size:12px;font-weight:700"> min</span></span>
+              </div>
+              <div style="position:relative;height:10px;border-radius:999px;background:var(--surface-2);margin:4px 0">
+                <div style="position:absolute;left:13px;top:50%;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--ink-3);box-shadow:0 3px 8px rgba(38,58,44,.2)"></div>
+              </div>
+            </div>
+
+            <div style="flex:1"></div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <button style="appearance:none;border:none;cursor:pointer;width:100%;height:54px;border-radius:var(--r-pill);background:var(--g-500);color:#fff;font-family:var(--font-cn);font-size:16px;font-weight:700;box-shadow:0 10px 20px -7px rgba(78,130,98,.6)" style-hover="background:var(--g-600)">保存 · 今天结束</button>
+              <p style="margin:0 0 6px;text-align:center;font-size:12px;color:var(--g-600)">保存后 → 连续运行第 22 天（0% 也计入）</p>
+            </div>
+          </div>
+          <div style="height:26px;display:flex;align-items:center;justify-content:center;flex:none"><div style="width:128px;height:5px;border-radius:3px;background:rgba(38,48,42,.22)"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="secH" style="width:1220px;max-width:1220px;margin:0 auto;padding:34px 0 8px">
+  <div style="display:flex;align-items:center;gap:12px;margin:0 0 22px;padding:0 4px">
+    <a href="#secH" style="font-family:var(--font-num);font-weight:800;font-size:13px;color:#fff;background:var(--g-600);padding:5px 11px;border-radius:8px;text-decoration:none;letter-spacing:.3px">H</a>
+    <span style="font-weight:700;font-size:17px;color:var(--ink)">Phase 2 / 3 · Progress 仪表盘</span>
+    <span style="font-size:12px;font-weight:600;color:#8a6420;background:var(--amber-bg);border:1px solid #ecdfbe;padding:4px 10px;border-radius:999px">预留位 · 现在不做完</span>
+    <span style="font-size:13px;color:var(--ink-3)">展示设计系统为数据面板预留的风格与位置</span>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start">
+
+    <div id="11" style="display:flex;flex-direction:column;gap:11px;flex:none;scroll-margin:90px">
+      <div style="display:flex;align-items:baseline;gap:8px;padding-left:6px">
+        <a href="#11" style="font-family:var(--font-num);font-weight:800;font-size:12px;color:var(--g-700);background:var(--g-100);padding:3px 8px;border-radius:6px;text-decoration:none">11</a>
+        <span style="font-size:13px;font-weight:500;color:var(--ink-2)">仪表盘预览 · 完成率 / 达标概率 / 负荷 / 热力图</span>
+      </div>
+      <div style="width:380px;background:linear-gradient(158deg,#22322b,#12201a);border-radius:46px;padding:12px;box-shadow:var(--shadow-phone);flex:none">
+        <div style="position:relative;width:356px;min-height:762px;background:var(--paper);border-radius:36px;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:52px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;flex:none;position:relative;z-index:5">
+            <span style="font-family:var(--font-num);font-weight:700;font-size:15px;color:var(--ink)">21:10</span>
+            <div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:104px;height:30px;background:#0e1a14;border-radius:16px"></div>
+            <svg width="66" height="14" viewBox="0 0 66 14" fill="none"><rect x="0" y="7" width="3" height="7" rx="1" fill="var(--ink)"/><rect x="5" y="5" width="3" height="9" rx="1" fill="var(--ink)"/><rect x="10" y="3" width="3" height="11" rx="1" fill="var(--ink)"/><rect x="15" y="1" width="3" height="13" rx="1" fill="var(--ink)"/><path d="M27 4.6c3-2.6 8-2.6 11 0M29.2 7.6c2-1.7 4.6-1.7 6.6 0M31.7 10.5c.9-.8 1.9-.8 2.8 0" stroke="var(--ink)" stroke-width="1.3" stroke-linecap="round"/><rect x="46" y="2.6" width="17" height="9" rx="2.6" stroke="var(--ink)" stroke-width="1.1"/><rect x="47.6" y="4.1" width="12" height="6" rx="1.2" fill="var(--g-500)"/><rect x="64" y="5" width="1.7" height="4" rx=".8" fill="var(--ink)"/></svg>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;padding:16px 18px 8px;gap:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:21px;font-weight:700;color:var(--ink)">进度</span><span style="font-size:12px;color:var(--ink-3)">2026 年 6 月</span></div>
+              <span style="font-size:11px;font-weight:600;color:#8a6420;background:var(--amber-bg);border:1px solid #ecdfbe;padding:4px 10px;border-radius:999px">Phase 2 预留</span>
+            </div>
+
+            <div style="background:linear-gradient(150deg,var(--g-600),var(--g-500));border-radius:var(--r-lg);padding:16px;display:flex;align-items:center;gap:14px;box-shadow:0 12px 26px -12px rgba(61,107,79,.7)">
+              <div style="width:52px;height:52px;border-radius:15px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;flex:none"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M11.5 20.5C7 20.5 4.2 17.2 4.2 12.6C4.2 7.4 8.2 4 19.3 3.6C19.3 13.8 15.7 20.5 11.5 20.5Z" fill="rgba(255,255,255,.4)" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/><path d="M11.5 20.5C11.5 15 13.4 9.4 18 5.6" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+              <div style="display:flex;flex-direction:column;gap:2px;flex:1"><span style="font-size:12.5px;color:rgba(255,255,255,.82)">连续运行天数</span><div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:var(--font-num);font-weight:800;font-size:32px;color:#fff;line-height:1">13</span><span style="font-size:13px;color:rgba(255,255,255,.82)">天 · 含 0% 日</span></div></div>
+              <div style="display:flex;gap:3px;align-items:flex-end;height:34px">
+                <span style="width:5px;height:40%;background:rgba(255,255,255,.5);border-radius:2px"></span><span style="width:5px;height:65%;background:rgba(255,255,255,.5);border-radius:2px"></span><span style="width:5px;height:30%;background:rgba(255,255,255,.4);border-radius:2px"></span><span style="width:5px;height:80%;background:rgba(255,255,255,.7);border-radius:2px"></span><span style="width:5px;height:55%;background:rgba(255,255,255,.5);border-radius:2px"></span><span style="width:5px;height:100%;background:#fff;border-radius:2px"></span>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px">
+              <div style="flex:1;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:13px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:10px">
+                <span style="font-size:11.5px;font-weight:600;color:var(--ink-3)">学习日 : 休息日</span>
+                <div style="display:flex;align-items:center;gap:11px">
+                  <div style="width:58px;height:58px;border-radius:50%;background:conic-gradient(var(--g-500) 0 67%,var(--clay) 67% 100%);display:flex;align-items:center;justify-content:center;flex:none"><div style="width:38px;height:38px;border-radius:50%;background:var(--surface)"></div></div>
+                  <div style="display:flex;flex-direction:column;gap:5px">
+                    <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-2)"><span style="width:8px;height:8px;border-radius:3px;background:var(--g-500)"></span>学 20</span>
+                    <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-2)"><span style="width:8px;height:8px;border-radius:3px;background:var(--clay)"></span>休 10</span>
+                  </div>
+                </div>
+              </div>
+              <div style="flex:1;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:13px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:8px">
+                <span style="font-size:11.5px;font-weight:600;color:var(--ink-3)">按保底节奏外推</span>
+                <div style="display:flex;align-items:baseline;gap:5px"><span style="font-family:var(--font-num);font-weight:800;font-size:26px;color:var(--g-700);line-height:1">3</span><span style="font-size:13px;color:var(--ink-2)">/ 4 科在轨</span></div>
+                <div style="display:flex;flex-direction:column;gap:5px;margin-top:2px">
+                  <div style="display:flex;align-items:center;gap:6px"><span style="font-size:11px;color:var(--ink-2);width:26px">英语</span><div style="flex:1;height:5px;border-radius:999px;background:var(--surface-2)"><div style="width:92%;height:100%;border-radius:999px;background:var(--g-500)"></div></div></div>
+                  <div style="display:flex;align-items:center;gap:6px"><span style="font-size:11px;color:var(--ink-2);width:26px">线代</span><div style="flex:1;height:5px;border-radius:999px;background:var(--surface-2)"><div style="width:48%;height:100%;border-radius:999px;background:var(--g-300)"></div></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:11.5px;font-weight:600;color:var(--ink-3)">每日负荷曲线</span><span style="font-size:11px;color:var(--ink-3)">近 14 天 · 分钟</span></div>
+              <svg width="100%" height="54" viewBox="0 0 320 54" preserveAspectRatio="none"><defs><linearGradient id="loadg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--g-400)" stop-opacity=".35"/><stop offset="1" stop-color="var(--g-400)" stop-opacity="0"/></linearGradient></defs><path d="M0 38 C 24 34, 40 18, 64 22 C 88 26, 104 8, 128 14 C 152 20, 168 44, 192 40 C 216 36, 232 16, 256 20 C 280 24, 296 30, 320 12 L320 54 L0 54 Z" fill="url(#loadg)"/><path d="M0 38 C 24 34, 40 18, 64 22 C 88 26, 104 8, 128 14 C 152 20, 168 44, 192 40 C 216 36, 232 16, 256 20 C 280 24, 296 30, 320 12" stroke="var(--g-500)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+            </div>
+
+            <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:14px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:9px">
+              <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:11.5px;font-weight:600;color:var(--ink-3)">学科热力图</span><span style="font-size:11px;color:var(--ink-3)">近 7 天</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--ink-2);width:26px">高数</span><div style="display:flex;gap:4px;flex:1"><span style="flex:1;height:16px;border-radius:5px;background:var(--g-500)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-200)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-400)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--surface-2)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-500)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-300)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-200)"></span></div></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--ink-2);width:26px">英语</span><div style="display:flex;gap:4px;flex:1"><span style="flex:1;height:16px;border-radius:5px;background:var(--g-300)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-300)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-400)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-300)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-200)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-400)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-300)"></span></div></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--ink-2);width:26px">线代</span><div style="display:flex;gap:4px;flex:1"><span style="flex:1;height:16px;border-radius:5px;background:var(--surface-2)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-400)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-200)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-500)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--clay-bg)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-300)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-400)"></span></div></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:var(--ink-2);width:26px">项目</span><div style="display:flex;gap:4px;flex:1"><span style="flex:1;height:16px;border-radius:5px;background:var(--g-200)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--surface-2)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-500)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-300)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-200)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--surface-2)"></span><span style="flex:1;height:16px;border-radius:5px;background:var(--g-400)"></span></div></div>
+            </div>
+
+            <div style="flex:1"></div>
+          </div>
+          <div style="height:26px;display:flex;align-items:center;justify-content:center;flex:none"><div style="width:128px;height:5px;border-radius:3px;background:rgba(38,48,42,.22)"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="secI" style="width:1220px;max-width:1220px;margin:0 auto;padding:34px 0 64px">
+  <div style="display:flex;align-items:center;gap:12px;margin:0 0 22px;padding:0 4px">
+    <a href="#secI" style="font-family:var(--font-num);font-weight:800;font-size:13px;color:#fff;background:var(--g-600);padding:5px 11px;border-radius:8px;text-decoration:none;letter-spacing:.3px">I</a>
+    <span style="font-weight:700;font-size:17px;color:var(--ink)">设计系统 · Tokens &amp; 可复用组件</span>
+    <span style="font-size:13px;color:var(--ink-3)">全部以 CSS 变量定义 · 可 1:1 映射到 tailwind.config</span>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-card);padding:30px 30px 34px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:30px">
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:15px;font-weight:700;color:var(--ink)">颜色 · Color</span><span style="font-size:12px;color:var(--ink-3)">森绿 = 系统在运行；休息/0% 从不用红色崩盘</span></div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:12px;font-weight:600;color:var(--ink-2)">品牌森绿 · <span style="font-family:var(--font-num);color:var(--ink-3)">--g-50 … --g-800 → colors.brand.50 … 900</span></span>
+        <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:8px">
+          <div style="display:flex;flex-direction:column;gap:5px"><div style="height:46px;border-radius:10px;background:var(--g-50);border:1px solid rgba(0,0,0,.05)"></div><span style="font-family:var(--font-num);font-weight:700;font-size:10.5px;color:var(--ink)">50</span><span style="font-size:9.5px;color:var(--ink-3)">#EFF5F0</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><div style="height:46px;border-radius:10px;background:var(--g-100)"></div><span style="font-family:var(--font-num);font-weight:700;font-size:10.5px;color:var(--ink)">100</span><span style="font-size:9.5px;color:var(--ink-3)">#DDEAE0</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><div style="height:46px;border-radius:10px;background:var(--g-200)"></div><span style="font-family:var(--font-num);font-weight:700;font-size:10.5px;color:var(--ink)">200</span><span style="font-size:9.5px;color:var(--ink-3)">#BFD8C6</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><div style="height:46px;border-radius:10px;background:var(--g-300)"></div><span style="font-family:var(--font-num);font-weight:700;font-size:10.5px;color:var(--ink)">300</span><span style="font-size:9.5px;color:var(--ink-3)">#98C0A5</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><div style="height:46px;border-radius:10px;background:var(--g-400)"></div><span style="font-family:var(--font-num);font-weight:700;font-size:10.5px;color:var(--ink)">400</span><span style="font-size:9.5px;color:var(--ink-3)">#6FA381</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><div style="height:46px;border-radius:10px;background:var(--g-500);box-shadow:0 0 0 2px var(--g-200)"></div><span style="font-family:var(--font-num);font-weight:800;font-size:10.5px;color:var(--g-700)">500 ·主</span><span style="font-size:9.5px;color:var(--ink-3)">#4E8262</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><div style="height:46px;border-radius:10px;background:var(--g-600)"></div><span style="font-family:var(--font-num);font-weight:700;font-size:10.5px;color:var(--ink)">600</span><span style="font-size:9.5px;color:var(--ink-3)">#3D6B4F</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><div style="height:46px;border-radius:10px;background:var(--g-700)"></div><span style="font-family:var(--font-num);font-weight:700;font-size:10.5px;color:var(--ink)">700</span><span style="font-size:9.5px;color:var(--ink-3)">#30553F</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><div style="height:46px;border-radius:10px;background:var(--g-800)"></div><span style="font-family:var(--font-num);font-weight:700;font-size:10.5px;color:var(--ink)">800</span><span style="font-size:9.5px;color:var(--ink-3)">#274633</span></div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:12px;font-weight:600;color:var(--ink-2)">中性 · 文字 / 表面</span>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--ink)"></div><span style="font-size:9.5px;color:var(--ink-2)">ink</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--ink-2)"></div><span style="font-size:9.5px;color:var(--ink-2)">ink-2</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--ink-3)"></div><span style="font-size:9.5px;color:var(--ink-2)">ink-3</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--hairline)"></div><span style="font-size:9.5px;color:var(--ink-2)">hair</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--canvas);border:1px solid var(--hairline)"></div><span style="font-size:9.5px;color:var(--ink-2)">canvas</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--paper);border:1px solid var(--hairline)"></div><span style="font-size:9.5px;color:var(--ink-2)">paper</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--surface);border:1px solid var(--hairline)"></div><span style="font-size:9.5px;color:var(--ink-2)">surface</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--surface-2);border:1px solid var(--hairline)"></div><span style="font-size:9.5px;color:var(--ink-2)">surf-2</span></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:12px;font-weight:600;color:var(--ink-2)">能量 / 日类型 · accent</span>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--amber)"></div><span style="font-size:9.5px;color:var(--ink-2)">高能</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--g-500)"></div><span style="font-size:9.5px;color:var(--ink-2)">普通</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--peri)"></div><span style="font-size:9.5px;color:var(--ink-2)">低谷</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--clay)"></div><span style="font-size:9.5px;color:var(--ink-2)">节奏休</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--slate)"></div><span style="font-size:9.5px;color:var(--ink-2)">灵活休</span></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:12px;font-weight:600;color:var(--ink-2)">语义 · semantic（无红色）</span>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--warn)"></div><span style="font-size:9.5px;color:var(--ink-2)">warn</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--info)"></div><span style="font-size:9.5px;color:var(--ink-2)">info</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="height:38px;border-radius:9px;background:var(--g-500)"></div><span style="font-size:9.5px;color:var(--ink-2)">达标</span></div>
+          </div>
+          <span style="font-size:10.5px;color:var(--ink-3);line-height:1.5">健康提醒用 warn(honey)，考前轻量用 info(slate) —— 提醒而非报错，全系统无红色。</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--hairline)"></div>
+
+    <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:30px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <span style="font-size:15px;font-weight:700;color:var(--ink)">字体 · Type</span>
+        <div style="display:flex;gap:12px">
+          <div style="flex:1;background:var(--surface-2);border-radius:var(--r-lg);padding:15px;display:flex;flex-direction:column;gap:6px">
+            <span style="font-family:var(--font-cn);font-size:34px;font-weight:700;color:var(--ink);line-height:1">学习系统</span>
+            <span style="font-size:12.5px;font-weight:700;color:var(--ink-2)">Noto Sans SC</span>
+            <span style="font-size:11px;color:var(--ink-3)">中文正文 · 400 / 500 / 700 / 900 · <span style="font-family:var(--font-num)">--font-cn</span></span>
+          </div>
+          <div style="flex:1;background:var(--surface-2);border-radius:var(--r-lg);padding:15px;display:flex;flex-direction:column;gap:6px">
+            <span style="font-family:var(--font-num);font-size:34px;font-weight:800;color:var(--g-700);line-height:1">45min 80%</span>
+            <span style="font-size:12.5px;font-weight:700;color:var(--ink-2)">Nunito</span>
+            <span style="font-size:11px;color:var(--ink-3)">数字 / 拉丁 · 600 / 700 / 800 · <span style="font-family:var(--font-num)">--font-num</span></span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;background:var(--surface-2);border-radius:var(--r-lg);padding:15px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font-size:28px;font-weight:900;color:var(--ink);line-height:1">显示 Display</span><span style="font-family:var(--font-num);font-size:11px;color:var(--ink-3)">28 / 900</span></div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font-size:22px;font-weight:700;color:var(--ink);line-height:1">标题 H1</span><span style="font-family:var(--font-num);font-size:11px;color:var(--ink-3)">22 / 700</span></div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font-size:15.5px;font-weight:400;color:var(--ink-2);line-height:1">正文 Body · reasoning 用 15.5</span><span style="font-family:var(--font-num);font-size:11px;color:var(--ink-3)">15.5 / 400</span></div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font-size:12.5px;font-weight:400;color:var(--ink-3);line-height:1">小字 Caption</span><span style="font-family:var(--font-num);font-size:11px;color:var(--ink-3)">12.5</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:15px;font-weight:700;color:var(--ink)">圆角 · Radius</span>
+          <div style="display:flex;align-items:flex-end;gap:12px">
+            <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><div style="width:46px;height:38px;background:var(--g-100);border:1.5px solid var(--g-300);border-radius:10px"></div><span style="font-size:10px;color:var(--ink-3)">sm 10</span></div>
+            <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><div style="width:46px;height:38px;background:var(--g-100);border:1.5px solid var(--g-300);border-radius:14px"></div><span style="font-size:10px;color:var(--ink-3)">md 14</span></div>
+            <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><div style="width:46px;height:38px;background:var(--g-100);border:1.5px solid var(--g-300);border-radius:20px"></div><span style="font-size:10px;color:var(--ink-3)">lg 20</span></div>
+            <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><div style="width:46px;height:38px;background:var(--g-100);border:1.5px solid var(--g-300);border-radius:26px"></div><span style="font-size:10px;color:var(--ink-3)">card 26</span></div>
+            <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><div style="width:46px;height:38px;background:var(--g-100);border:1.5px solid var(--g-300);border-radius:999px"></div><span style="font-size:10px;color:var(--ink-3)">pill</span></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:15px;font-weight:700;color:var(--ink)">间距 · Space <span style="font-size:11px;font-weight:400;color:var(--ink-3)">4 基数 → Tailwind spacing</span></span>
+          <div style="display:flex;align-items:flex-end;gap:10px">
+            <div style="display:flex;flex-direction:column;gap:4px;align-items:center"><div style="width:4px;height:24px;background:var(--g-400);border-radius:2px"></div><span style="font-size:10px;color:var(--ink-3)">4</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px;align-items:center"><div style="width:8px;height:24px;background:var(--g-400);border-radius:2px"></div><span style="font-size:10px;color:var(--ink-3)">8</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px;align-items:center"><div style="width:12px;height:24px;background:var(--g-400);border-radius:2px"></div><span style="font-size:10px;color:var(--ink-3)">12</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px;align-items:center"><div style="width:16px;height:24px;background:var(--g-400);border-radius:2px"></div><span style="font-size:10px;color:var(--ink-3)">16</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px;align-items:center"><div style="width:20px;height:24px;background:var(--g-400);border-radius:2px"></div><span style="font-size:10px;color:var(--ink-3)">20</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px;align-items:center"><div style="width:24px;height:24px;background:var(--g-400);border-radius:2px"></div><span style="font-size:10px;color:var(--ink-3)">24</span></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:15px;font-weight:700;color:var(--ink)">阴影 · Shadow</span>
+          <div style="display:flex;gap:14px">
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><div style="width:56px;height:40px;background:var(--surface);border-radius:12px;box-shadow:var(--shadow-card)"></div><span style="font-size:10px;color:var(--ink-3)">card</span></div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><div style="width:56px;height:40px;background:var(--surface);border-radius:12px;box-shadow:var(--shadow-pop)"></div><span style="font-size:10px;color:var(--ink-3)">pop</span></div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:center"><div style="width:56px;height:40px;background:var(--surface);border-radius:12px;box-shadow:0 18px 30px -16px rgba(24,42,32,.5)"></div><span style="font-size:10px;color:var(--ink-3)">phone</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div style="height:1px;background:var(--hairline)"></div>
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:15px;font-weight:700;color:var(--ink)">组件 · Components</span><span style="font-size:12px;color:var(--ink-3)">Phase 1 直接实现的复用单元</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:16px">
+
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <span style="font-size:11px;font-weight:600;color:var(--ink-3)">按钮 · Button</span>
+          <div style="background:var(--surface-2);border-radius:var(--r-lg);padding:15px;display:flex;flex-direction:column;gap:9px">
+            <button style="appearance:none;border:none;cursor:pointer;width:100%;height:44px;border-radius:var(--r-pill);background:var(--g-500);color:#fff;font-family:var(--font-cn);font-size:14px;font-weight:700;box-shadow:0 8px 16px -6px rgba(78,130,98,.6)">主按钮 Primary</button>
+            <button style="appearance:none;cursor:pointer;width:100%;height:44px;border-radius:var(--r-pill);background:var(--surface);border:1.5px solid var(--hairline);color:var(--ink-2);font-family:var(--font-cn);font-size:14px;font-weight:600">次按钮 Secondary</button>
+            <button style="appearance:none;width:100%;height:44px;border-radius:var(--r-pill);background:var(--surface-2);border:1px solid var(--hairline);color:var(--ink-3);font-family:var(--font-cn);font-size:14px;font-weight:700;cursor:not-allowed">禁用 Disabled</button>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <span style="font-size:11px;font-weight:600;color:var(--ink-3)">日类型徽章 · DayType</span>
+          <div style="background:var(--surface-2);border-radius:var(--r-lg);padding:15px;display:flex;flex-direction:column;gap:9px;align-items:flex-start">
+            <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--g-700);background:var(--g-50);border:1px solid var(--g-100);padding:6px 12px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:var(--g-500)"></span>学习日</span>
+            <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:#7a6034;background:var(--clay-bg);border:1px solid #e6dac6;padding:6px 12px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:var(--clay)"></span>节奏休息日</span>
+            <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:#436670;background:var(--slate-bg);border:1px solid #d3e3e5;padding:6px 12px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:var(--slate)"></span>灵活休息日</span>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <span style="font-size:11px;font-weight:600;color:var(--ink-3)">能量 & 连续 · Energy / Streak</span>
+          <div style="background:var(--surface-2);border-radius:var(--r-lg);padding:15px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+            <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#8a6420;background:var(--amber-bg);padding:6px 11px;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:var(--amber)"></span>高能</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--g-700);background:var(--g-50);padding:6px 11px;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:var(--g-500)"></span>普通</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#4f5399;background:var(--peri-bg);padding:6px 11px;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:var(--peri)"></span>低谷</span>
+            <span style="display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--g-700);background:var(--g-50);border:1px solid var(--g-100);padding:6px 11px;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:var(--g-500);animation:plosBreathe 2.4s ease-in-out infinite"></span>连续 12 天</span>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <span style="font-size:11px;font-weight:600;color:var(--ink-3)">目标类型 & 状态 · Tags</span>
+          <div style="background:var(--surface-2);border-radius:var(--r-lg);padding:15px;display:flex;flex-wrap:wrap;gap:7px;align-items:center">
+            <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--g-700);background:var(--g-50);padding:4px 9px;border-radius:999px"><span style="width:6px;height:6px;border-radius:50%;background:var(--g-500)"></span>按期完成</span>
+            <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#436670;background:var(--slate-bg);padding:4px 9px;border-radius:999px"><span style="width:6px;height:6px;border-radius:50%;background:var(--slate)"></span>每天做</span>
+            <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#8a6420;background:var(--amber-bg);padding:4px 9px;border-radius:999px"><span style="width:6px;height:6px;border-radius:50%;background:var(--amber)"></span>里程碑</span>
+            <span style="font-size:10.5px;font-weight:600;color:#8a6420;background:var(--amber-bg);padding:3px 8px;border-radius:6px">落后节奏</span>
+            <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:var(--g-600);background:var(--g-50);padding:3px 9px;border-radius:999px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="var(--g-600)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>已达标</span>
+            <span style="font-size:11px;font-weight:600;color:#436670;background:var(--slate-bg);padding:3px 9px;border-radius:999px">进行中</span>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:9px;grid-column:span 2">
+          <span style="font-size:11px;font-weight:600;color:var(--ink-3)">重要性等级 &amp; 步进器 · Importance / Stepper</span>
+          <div style="background:var(--surface-2);border-radius:var(--r-lg);padding:15px;display:flex;flex-direction:column;gap:11px">
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <div style="display:inline-flex;background:var(--surface);border:1px solid var(--hairline);border-radius:999px;padding:3px;gap:2px">
+                <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 11px;border-radius:999px">低</span>
+                <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 11px;border-radius:999px">中</span>
+                <span style="font-size:12px;font-weight:700;color:#fff;background:var(--g-500);padding:5px 11px;border-radius:999px;box-shadow:0 2px 6px -1px rgba(78,130,98,.55)">高</span>
+                <span style="font-size:12px;font-weight:600;color:var(--ink-3);padding:5px 10px;border-radius:999px">最高</span>
+              </div>
+              <div style="display:inline-flex;align-items:center;border:1px solid var(--hairline);border-radius:999px;background:var(--surface);overflow:hidden">
+                <button style="appearance:none;border:none;background:none;cursor:pointer;width:30px;height:30px;color:var(--ink-3);font-size:16px;padding:0">−</button>
+                <span style="font-family:var(--font-num);font-weight:700;font-size:14px;color:var(--ink);min-width:24px;text-align:center">5</span>
+                <button style="appearance:none;border:none;background:none;cursor:pointer;width:30px;height:30px;color:var(--g-600);font-size:16px;padding:0">+</button>
+              </div>
+              <span style="font-family:var(--font-num);font-weight:700;font-size:13px;color:var(--g-700);background:var(--g-50);padding:6px 11px;border-radius:999px">达标 80%</span>
+            </div>
+            <span style="font-size:11px;color:var(--ink-3)">重要性映射：低 0.8 · 中 1.0 · 高 1.2 · 最高 1.5 —— 值越高，平日分到的时间越多。</span>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <span style="font-size:11px;font-weight:600;color:var(--ink-3)">计划条目 · PlanItem</span>
+          <div style="background:var(--surface-2);border-radius:var(--r-lg);padding:15px;display:flex;align-items:center">
+            <div style="display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-md);padding:11px 13px;box-shadow:var(--shadow-card);width:100%">
+              <div style="width:24px;height:24px;border-radius:8px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:800;font-size:13px;color:var(--ink-3);flex:none">1</div>
+              <div style="display:flex;flex-direction:column;gap:2px;flex:1"><div style="display:flex;align-items:center;gap:7px"><span style="font-size:15px;font-weight:700;color:var(--ink)">线代</span><span style="font-family:var(--font-num);font-weight:700;font-size:12px;color:var(--g-700);background:var(--g-50);padding:2px 8px;border-radius:7px">30 min</span></div><span style="font-size:12px;color:var(--ink-2)">线代刷题（接昨天）</span></div>
+              <div style="width:22px;height:22px;border-radius:50%;border:2px solid var(--hairline);flex:none"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:9px;grid-column:span 2">
+          <span style="font-size:11px;font-weight:600;color:var(--ink-3)">reasoning 卡（信任元件 · 15.5px 显眼）· Reasoning</span>
+          <div style="background:linear-gradient(160deg,var(--g-50),#e5f0e8);border:1px solid var(--g-100);border-radius:var(--r-lg);padding:15px;display:flex;flex-direction:column;gap:9px">
+            <div style="display:flex;align-items:center;gap:8px"><div style="width:26px;height:26px;border-radius:9px;background:var(--g-100);display:flex;align-items:center;justify-content:center;flex:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M11.5 20.5C7 20.5 4.2 17.2 4.2 12.6C4.2 7.4 8.2 4 19.3 3.6C19.3 13.8 15.7 20.5 11.5 20.5Z" fill="var(--g-300)" stroke="var(--g-700)" stroke-width="1.4" stroke-linejoin="round"/></svg></div><span style="font-size:12.5px;font-weight:700;color:var(--g-700)">系统为什么这么排</span></div>
+            <p style="margin:0;font-size:14.5px;line-height:1.7;color:var(--g-800)">今天低谷日，预算压到 <b style="font-weight:700">45 分钟</b>；线代<b style="font-weight:700">保底剩 13 天</b>压力最高，只保它和英语。</p>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <span style="font-size:11px;font-weight:600;color:var(--ink-3)">灵活休息按钮 · FlexRest</span>
+          <div style="background:var(--surface-2);border-radius:var(--r-lg);padding:15px;display:flex;align-items:center">
+            <button style="appearance:none;cursor:pointer;width:100%;height:46px;border-radius:var(--r-pill);background:var(--surface);border:1.5px solid var(--hairline);color:var(--ink-2);font-family:var(--font-cn);font-size:13.5px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5Z" stroke="var(--ink-3)" stroke-width="1.6" stroke-linejoin="round"/></svg>用一个灵活休息日<span style="font-family:var(--font-num);font-weight:700;font-size:11px;color:#436670;background:var(--slate-bg);padding:3px 8px;border-radius:999px">2/2</span></button>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <span style="font-size:11px;font-weight:600;color:var(--ink-3)">滑块 · Slider</span>
+          <div style="background:var(--surface-2);border-radius:var(--r-lg);padding:20px 15px;display:flex;align-items:center">
+            <div style="position:relative;height:10px;border-radius:999px;background:var(--surface);flex:1;box-shadow:inset 0 0 0 1px var(--hairline)"><div style="position:absolute;left:0;top:0;bottom:0;width:80%;border-radius:999px;background:var(--g-500)"></div><div style="position:absolute;left:80%;top:50%;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:#fff;border:3px solid var(--g-500);box-shadow:0 3px 8px rgba(38,58,44,.25)"></div></div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <span style="font-size:11px;font-weight:600;color:var(--ink-3)">达标进度条 · Threshold</span>
+          <div style="background:var(--surface-2);border-radius:var(--r-lg);padding:20px 15px;display:flex;align-items:center;gap:9px">
+            <div style="position:relative;height:9px;border-radius:999px;background:var(--surface);flex:1;box-shadow:inset 0 0 0 1px var(--hairline)"><div style="position:absolute;left:0;top:0;bottom:0;width:62%;border-radius:999px;background:var(--g-400)"></div><div style="position:absolute;left:80%;top:-2px;bottom:-2px;width:2px;border-radius:2px;background:var(--g-700)"></div></div>
+            <span style="font-family:var(--font-num);font-weight:700;font-size:12px;color:var(--ink-2)">62%</span>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:9px;grid-column:span 2">
+          <span style="font-size:11px;font-weight:600;color:var(--ink-3)">横切条 · 健康提醒 / 考前轻量（提醒，不报错）</span>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div style="background:var(--warn-bg);border:1px solid #ecdfbe;border-radius:var(--r-md);padding:10px 13px;display:flex;align-items:center;gap:10px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" style="flex:none"><path d="M12 4.5L21 19.5H3L12 4.5Z" fill="rgba(169,128,47,.12)" stroke="var(--warn)" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 10v4" stroke="var(--warn)" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16.4" r="1.05" fill="var(--warn)"/></svg><span style="font-size:12.5px;color:#8a6420;flex:1">已连续 4 天没运动，动一动 · 不改计划</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex:none;opacity:.55"><path d="M6 6l12 12M18 6L6 18" stroke="#8a6420" stroke-width="2" stroke-linecap="round"/></svg></div>
+            <div style="background:var(--info-bg);border:1px solid #d3e3e5;border-radius:var(--r-md);padding:10px 13px;display:flex;align-items:center;gap:10px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" style="flex:none"><rect x="4" y="5.5" width="16" height="14.5" rx="3" stroke="var(--info)" stroke-width="1.6"/><path d="M4 10h16" stroke="var(--info)" stroke-width="1.6"/><path d="M8.5 3.5v3M15.5 3.5v3" stroke="var(--info)" stroke-width="1.6" stroke-linecap="round"/></svg><span style="font-size:12.5px;color:#436670">明天高数考试 · 今日只复习，不上新内容</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section></x-dc>
+</body>
+</html>
