@@ -1,0 +1,144 @@
+import SwiftUI
+import WidgetKit
+
+// MARK: - §P.5: Lock/Home Screen Widget (today's first 2 items + streak)
+
+struct PLOSWidgetEntry: TimelineEntry {
+    let date: Date
+    let streak: Int
+    let item1: String?
+    let item2: String?
+    let hasPlan: Bool
+}
+
+struct PLOSWidgetProvider: TimelineProvider {
+    func placeholder(in context: Context) -> PLOSWidgetEntry {
+        PLOSWidgetEntry(date: Date(), streak: 12, item1: "线代 · 30 min", item2: "英语 · 15 min", hasPlan: true)
+    }
+
+    func getSnapshot(in context: Context, completion: @escaping (PLOSWidgetEntry) -> Void) {
+        let entry = PLOSWidgetEntry(date: Date(), streak: 12,
+                                     item1: "线代 · 30 min", item2: "英语 · 15 min", hasPlan: true)
+        completion(entry)
+    }
+
+    func getTimeline(in context: Context, completion: @escaping (Timeline<PLOSWidgetEntry>) -> Void) {
+        // Read from shared UserDefaults (app writes there)
+        let defaults = UserDefaults(suiteName: "group.com.plos.app")
+        let streak = defaults?.integer(forKey: "widget_streak") ?? 0
+        let item1 = defaults?.string(forKey: "widget_item1")
+        let item2 = defaults?.string(forKey: "widget_item2")
+        let hasPlan = defaults?.bool(forKey: "widget_has_plan") ?? false
+
+        let entry = PLOSWidgetEntry(date: Date(), streak: streak,
+                                     item1: item1, item2: item2, hasPlan: hasPlan)
+        let timeline = Timeline(entries: [entry], policy: .after(Date().addingTimeInterval(3600)))
+        completion(timeline)
+    }
+}
+
+struct PLOSWidgetEntryView: View {
+    var entry: PLOSWidgetEntry
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: "leaf.fill")
+                    .font(.system(size: 13))
+                    .foregroundColor(Color(hex: 0x4E8262))
+                Text("PLOS")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundColor(Color(hex: 0x30553F))
+                Spacer()
+                if entry.streak > 0 {
+                    Text("\(entry.streak)天")
+                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .foregroundColor(Color(hex: 0x4E8262))
+                }
+            }
+
+            if entry.hasPlan {
+                VStack(alignment: .leading, spacing: 4) {
+                    if let i1 = entry.item1 {
+                        Text(i1)
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundColor(Color(hex: 0x26302A))
+                            .lineLimit(1)
+                    }
+                    if let i2 = entry.item2 {
+                        Text(i2)
+                            .font(.system(size: 11))
+                            .foregroundColor(Color(hex: 0x586159))
+                            .lineLimit(1)
+                    }
+                }
+            } else {
+                Text("打开生成今日计划")
+                    .font(.system(size: 12))
+                    .foregroundColor(Color(hex: 0x8C958B))
+            }
+        }
+        .padding(14)
+        .background(Color(hex: 0xF6F8F2))
+        .containerBackground(.fill, for: .widget)
+    }
+}
+
+// Helper: Color from hex (embedded to avoid dependency on DesignSystem in widget extension)
+extension Color {
+    init(hex: UInt32, alpha: Double = 1) {
+        self.init(
+            .sRGB,
+            red: Double((hex >> 16) & 0xFF) / 255,
+            green: Double((hex >> 8) & 0xFF) / 255,
+            blue: Double(hex & 0xFF) / 255,
+            opacity: alpha
+        )
+    }
+}
+
+struct PLOSWidget: Widget {
+    let kind: String = "PLOSWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: PLOSWidgetProvider()) { entry in
+            PLOSWidgetEntryView(entry: entry)
+        }
+        .configurationDisplayName("PLOS 今日计划")
+        .description("显示今日前2项任务和连续运行天数")
+        .supportedFamilies([.systemSmall, .systemMedium])
+    }
+}
+
+// MARK: - Widget bundle entry point
+
+@main
+struct PLOSWidgetBundle: WidgetBundle {
+    var body: some Widget {
+        PLOSWidget()
+    }
+}
+
+// MARK: - Helper for AppViewModel to publish widget data
+
+extension AppViewModel {
+    /// Write today's plan summary to shared UserDefaults for widget consumption.
+    func updateWidgetData() {
+        guard let defaults = UserDefaults(suiteName: "group.com.plos.app") else { return }
+        defaults.set(todayStreak, forKey: "widget_streak")
+        defaults.set(!todayPlannedItems.isEmpty, forKey: "widget_has_plan")
+        if todayPlannedItems.count >= 1 {
+            let i1 = todayPlannedItems[0]
+            defaults.set("\(i1.label) · \(i1.minutes) min", forKey: "widget_item1")
+        } else {
+            defaults.removeObject(forKey: "widget_item1")
+        }
+        if todayPlannedItems.count >= 2 {
+            let i2 = todayPlannedItems[1]
+            defaults.set("\(i2.label) · \(i2.minutes) min", forKey: "widget_item2")
+        } else {
+            defaults.removeObject(forKey: "widget_item2")
+        }
+        defaults.synchronize()
+    }
+}
