@@ -2,8 +2,8 @@
 import PackageDescription
 
 let package = Package(
-    name: "PLOSKernel",
-    platforms: [.macOS(.v13), .iOS(.v16)],
+    name: "PLOS",
+    platforms: [.iOS(.v17), .macOS(.v14)],
     products: [
         .library(name: "PLOSKernel", targets: ["PLOSKernel"]),
     ],
@@ -17,9 +17,7 @@ let package = Package(
             name: "PLOSKernelTests",
             dependencies: ["PLOSKernel"],
             path: "Tests/PLOSKernelTests",
-            resources: [
-                .copy("Fixtures")
-            ]
+            resources: [.copy("Fixtures")]
         ),
     ]
 )
