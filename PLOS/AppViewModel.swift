@@ -29,7 +29,7 @@ final class AppViewModel {
 
     // MARK: - Injected
 
-    private var modelContext: ModelContext?
+    var modelContext: ModelContext?
 
     // MARK: - UI State
 
