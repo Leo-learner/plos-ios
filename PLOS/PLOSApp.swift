@@ -4,7 +4,8 @@ import SwiftUI
 
 /// Root view with a segmented control to preview all screens.
 /// In production, this would use NavigationStack + programmatic routing.
-@main
+/// NOTE: `@main` disabled — `PLOSIntApp` is the real wired entry point.
+/// This struct is a dev-only Phase-UI preview harness (static MockData screens).
 struct PLOSApp: App {
     @State private var selectedScreen: Screen = .onboarding
 

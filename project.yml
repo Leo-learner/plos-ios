@@ -2,6 +2,9 @@ name: PLOS
 options:
   deploymentTarget:
     iOS: "17.0"
+packages:
+  PLOSKernel:
+    path: .
 targets:
   PLOS:
     type: application
@@ -9,6 +12,9 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: PLOS
+    dependencies:
+      - package: PLOSKernel
+        product: PLOSKernel
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.plos.app
