@@ -244,8 +244,8 @@ struct GoalCard: View {
                 .fill(PLOS.Palette.surface)
                 .overlay(RoundedRectangle(cornerRadius: PLOS.Radius.lg).stroke(PLOS.Palette.hairline, lineWidth: 1))
         )
-        .shadow(color: Color(hex: 0x263A2C).opacity(0.06), radius: 6, y: 3)
-        .shadow(color: Color(hex: 0x263A2C).opacity(0.05), radius: 1, y: 1)
+        .shadow(color: PLOS.Palette.shadow.opacity(0.06), radius: 6, y: 3)
+        .shadow(color: PLOS.Palette.shadow.opacity(0.05), radius: 1, y: 1)
     }
 }
 

@@ -28,7 +28,7 @@ struct EventsView: View {
                     Spacer()
                     Text("考试")
                         .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(Color(hex: 0x436670))
+                        .foregroundColor(PLOS.Palette.teal)
                         .padding(.horizontal, 9).padding(.vertical, 3)
                         .background(RoundedRectangle(cornerRadius: PLOS.Radius.pill).fill(PLOS.Palette.slateBg))
                 }

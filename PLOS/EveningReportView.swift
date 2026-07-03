@@ -106,7 +106,7 @@ struct ReportSliderCard: View {
                     .fill(.white)
                     .overlay(Circle().stroke(PLOS.Palette.g500, lineWidth: 3))
                     .frame(width: 26, height: 26)
-                    .shadow(color: Color(hex: 0x263A2C).opacity(0.25), radius: 3, y: 3)
+                    .shadow(color: PLOS.Palette.shadow.opacity(0.25), radius: 3, y: 3)
                     .offset(x: CGFloat(sliderValue / 100.0) * 290 - 13)
                     .gesture(
                         DragGesture(minimumDistance: 0)
@@ -142,8 +142,8 @@ struct ReportSliderCard: View {
                 .fill(PLOS.Palette.surface)
                 .overlay(RoundedRectangle(cornerRadius: PLOS.Radius.lg).stroke(PLOS.Palette.hairline, lineWidth: 1))
         )
-        .shadow(color: Color(hex: 0x263A2C).opacity(0.06), radius: 6, y: 3)
-        .shadow(color: Color(hex: 0x263A2C).opacity(0.05), radius: 1, y: 1)
+        .shadow(color: PLOS.Palette.shadow.opacity(0.06), radius: 6, y: 3)
+        .shadow(color: PLOS.Palette.shadow.opacity(0.05), radius: 1, y: 1)
     }
 }
 
@@ -245,7 +245,7 @@ struct ZeroSliderCard: View {
                     .fill(.white)
                     .overlay(Circle().stroke(PLOS.Palette.ink3, lineWidth: 3))
                     .frame(width: 26, height: 26)
-                    .shadow(color: Color(hex: 0x263A2C).opacity(0.2), radius: 3, y: 3)
+                    .shadow(color: PLOS.Palette.shadow.opacity(0.2), radius: 3, y: 3)
                     .offset(x: -13)
             }
             .padding(.vertical, 4)
@@ -257,8 +257,8 @@ struct ZeroSliderCard: View {
                 .fill(PLOS.Palette.surface)
                 .overlay(RoundedRectangle(cornerRadius: PLOS.Radius.lg).stroke(PLOS.Palette.hairline, lineWidth: 1))
         )
-        .shadow(color: Color(hex: 0x263A2C).opacity(0.06), radius: 6, y: 3)
-        .shadow(color: Color(hex: 0x263A2C).opacity(0.05), radius: 1, y: 1)
+        .shadow(color: PLOS.Palette.shadow.opacity(0.06), radius: 6, y: 3)
+        .shadow(color: PLOS.Palette.shadow.opacity(0.05), radius: 1, y: 1)
     }
 }
 

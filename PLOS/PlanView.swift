@@ -112,7 +112,7 @@ struct PlanView: View {
                                 }
                                 Text("截止6/25")
                                     .font(.system(size: 11, weight: .bold))
-                                    .foregroundColor(Color(hex: 0x8A6420))
+                                    .foregroundColor(PLOS.Palette.amberInk)
                                     .frame(width: 52, alignment: .trailing)
                             }
                         }
@@ -124,8 +124,8 @@ struct PlanView: View {
                                 .overlay(RoundedRectangle(cornerRadius: PLOS.Radius.lg)
                                     .stroke(PLOS.Palette.hairline, lineWidth: 1))
                         )
-                        .shadow(color: Color(hex: 0x263A2C).opacity(0.06), radius: 6, y: 3)
-                        .shadow(color: Color(hex: 0x263A2C).opacity(0.05), radius: 1, y: 1)
+                        .shadow(color: PLOS.Palette.shadow.opacity(0.06), radius: 6, y: 3)
+                        .shadow(color: PLOS.Palette.shadow.opacity(0.05), radius: 1, y: 1)
 
                         Spacer(minLength: 8)
 
@@ -178,7 +178,7 @@ struct CompletedTaskRow: View {
                 .foregroundColor(PLOS.Palette.ink3)
             Text(isDone ? "完成" : "进行中")
                 .font(.system(size: 11, weight: .semibold))
-                .foregroundColor(isDone ? PLOS.Palette.g600 : Color(hex: 0x436670))
+                .foregroundColor(isDone ? PLOS.Palette.g600 : PLOS.Palette.teal)
                 .padding(.horizontal, 9)
                 .padding(.vertical, 3)
                 .background(
@@ -193,8 +193,8 @@ struct CompletedTaskRow: View {
                 .fill(PLOS.Palette.surface)
                 .overlay(RoundedRectangle(cornerRadius: PLOS.Radius.md).stroke(PLOS.Palette.hairline, lineWidth: 1))
         )
-        .shadow(color: Color(hex: 0x263A2C).opacity(0.06), radius: 6, y: 3)
-        .shadow(color: Color(hex: 0x263A2C).opacity(0.05), radius: 1, y: 1)
+        .shadow(color: PLOS.Palette.shadow.opacity(0.06), radius: 6, y: 3)
+        .shadow(color: PLOS.Palette.shadow.opacity(0.05), radius: 1, y: 1)
     }
 }
 
@@ -230,7 +230,7 @@ struct ActiveTaskRow: View {
                 .foregroundColor(PLOS.Palette.ink3)
             Text(status)
                 .font(.system(size: 11, weight: .semibold))
-                .foregroundColor(Color(hex: 0x436670))
+                .foregroundColor(PLOS.Palette.teal)
                 .padding(.horizontal, 9)
                 .padding(.vertical, 3)
                 .background(
@@ -245,8 +245,8 @@ struct ActiveTaskRow: View {
                 .fill(PLOS.Palette.surface)
                 .overlay(RoundedRectangle(cornerRadius: PLOS.Radius.md).stroke(PLOS.Palette.hairline, lineWidth: 1))
         )
-        .shadow(color: Color(hex: 0x263A2C).opacity(0.06), radius: 6, y: 3)
-        .shadow(color: Color(hex: 0x263A2C).opacity(0.05), radius: 1, y: 1)
+        .shadow(color: PLOS.Palette.shadow.opacity(0.06), radius: 6, y: 3)
+        .shadow(color: PLOS.Palette.shadow.opacity(0.05), radius: 1, y: 1)
     }
 }
 

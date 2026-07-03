@@ -17,7 +17,7 @@ struct HealthReminderBanner: View {
                     .padding(.top, 2)
                 Text(.init(message))
                     .font(.system(size: PLOS.FontScale.caption))
-                    .foregroundColor(Color(hex: 0x8A6420))
+                    .foregroundColor(PLOS.Palette.amberInk)
                     .lineSpacing(1.55)
                 Spacer()
                 Button(action: {
@@ -26,17 +26,17 @@ struct HealthReminderBanner: View {
                 }) {
                     Image(systemName: "xmark")
                         .font(.system(size: 12))
-                        .foregroundColor(Color(hex: 0x8A6420).opacity(0.55))
+                        .foregroundColor(PLOS.Palette.amberInk.opacity(0.55))
                 }
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 11)
             .background(PLOS.Palette.warnBg)
             .overlay(alignment: .top) {
-                Rectangle().fill(Color(hex: 0xECDFBE)).frame(height: 1)
+                Rectangle().fill(PLOS.Palette.sand).frame(height: 1)
             }
             .overlay(alignment: .bottom) {
-                Rectangle().fill(Color(hex: 0xECDFBE)).frame(height: 1)
+                Rectangle().fill(PLOS.Palette.sand).frame(height: 1)
             }
             .transition(.move(edge: .top).combined(with: .opacity))
         }
@@ -57,7 +57,7 @@ struct ExamWarningBanner: View {
                 .padding(.top, 2)
             Text(.init(message))
                 .font(.system(size: PLOS.FontScale.caption))
-                .foregroundColor(Color(hex: 0x436670))
+                .foregroundColor(PLOS.Palette.teal)
                 .lineSpacing(1.55)
             Spacer()
         }
@@ -65,10 +65,10 @@ struct ExamWarningBanner: View {
         .padding(.vertical, 11)
         .background(PLOS.Palette.slateBg)
         .overlay(alignment: .top) {
-            Rectangle().fill(Color(hex: 0xD3E3E5)).frame(height: 1)
+            Rectangle().fill(PLOS.Palette.slateLine).frame(height: 1)
         }
         .overlay(alignment: .bottom) {
-            Rectangle().fill(Color(hex: 0xD3E3E5)).frame(height: 1)
+            Rectangle().fill(PLOS.Palette.slateLine).frame(height: 1)
         }
     }
 }
@@ -136,28 +136,28 @@ struct DayTypeChip: View {
                 Circle().fill(PLOS.Palette.clay).frame(width: 7, height: 7)
                 Text("节奏休息日")
                     .font(.system(size: PLOS.FontScale.caption, weight: .bold))
-                    .foregroundColor(Color(hex: 0x7A6034))
+                    .foregroundColor(PLOS.Palette.clayInkAlt)
             }
             .padding(.horizontal, 13)
             .padding(.vertical, 7)
             .background(
                 RoundedRectangle(cornerRadius: PLOS.Radius.pill)
-                    .fill(Color(hex: 0xF6EEDD).opacity(0.8))
-                    .overlay(RoundedRectangle(cornerRadius: PLOS.Radius.pill).stroke(Color(hex: 0xE6DAC6), lineWidth: 1))
+                    .fill(PLOS.Palette.clayChipBg.opacity(0.8))
+                    .overlay(RoundedRectangle(cornerRadius: PLOS.Radius.pill).stroke(PLOS.Palette.clayChipEdge, lineWidth: 1))
             )
         case .flexRest:
             HStack(spacing: 7) {
                 Circle().fill(PLOS.Palette.slate).frame(width: 7, height: 7)
                 Text("灵活休息日")
                     .font(.system(size: PLOS.FontScale.caption, weight: .bold))
-                    .foregroundColor(Color(hex: 0x436670))
+                    .foregroundColor(PLOS.Palette.teal)
             }
             .padding(.horizontal, 13)
             .padding(.vertical, 7)
             .background(
                 RoundedRectangle(cornerRadius: PLOS.Radius.pill)
-                    .fill(Color(hex: 0xE2EFF0).opacity(0.8))
-                    .overlay(RoundedRectangle(cornerRadius: PLOS.Radius.pill).stroke(Color(hex: 0xD3E3E5), lineWidth: 1))
+                    .fill(PLOS.Palette.slateChipBg.opacity(0.8))
+                    .overlay(RoundedRectangle(cornerRadius: PLOS.Radius.pill).stroke(PLOS.Palette.slateLine, lineWidth: 1))
             )
         }
     }
@@ -190,9 +190,9 @@ struct DayTypeChip: View {
         switch dayType {
         case .study(let e):
             switch e {
-            case .high: return Color(hex: 0xECDFBE)
+            case .high: return PLOS.Palette.sand
             case .normal: return PLOS.Palette.g100
-            case .low: return Color(hex: 0xDCDEF3)
+            case .low: return PLOS.Palette.periChipBg
             }
         default: return .clear
         }
@@ -202,9 +202,9 @@ struct DayTypeChip: View {
         switch dayType {
         case .study(let e):
             switch e {
-            case .high: return Color(hex: 0x8A6420)
+            case .high: return PLOS.Palette.amberInk
             case .normal: return PLOS.Palette.g700
-            case .low: return Color(hex: 0x4F5399)
+            case .low: return PLOS.Palette.periInk
             }
         default: return .clear
         }

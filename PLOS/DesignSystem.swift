@@ -70,6 +70,48 @@ enum PLOS {
         /// Health banner
         static let warn      = Color(hex: 0xA9802F)
         static let warnBg    = Color(hex: 0xF8EFD6)
+
+        // MARK: Extended tokens (mapped from previously-inline hex literals — same values)
+        // Shadows / floating orb (SharedViews)
+        static let shadow      = Color(hex: 0x263A2C)
+        static let orbShadow   = Color(hex: 0x182A20)
+        static let orbCore     = Color(hex: 0x0E1A14)
+        static let orbHi       = Color(hex: 0x22322B)
+        static let orbLo       = Color(hex: 0x12201A)
+        // Teal / info text
+        static let teal        = Color(hex: 0x436670)
+        // Amber ink (reasoning tags, health text)
+        static let amberInk    = Color(hex: 0x8A6420)
+        // Slate (flex-rest / cool) family
+        static let slateInk     = Color(hex: 0x37545C)
+        static let slateText    = Color(hex: 0x5C7C84)
+        static let slateMuted   = Color(hex: 0x6F8F97)
+        static let slateLine    = Color(hex: 0xD3E3E5)
+        static let slateOrb1    = Color(hex: 0xDCECEE)
+        static let slateOrbEdge = Color(hex: 0xCFE3E5)
+        static let slateShadow  = Color(hex: 0x467882)
+        static let slateDash    = Color(hex: 0xB9CFD3)
+        static let slateBg1     = Color(hex: 0xF4F8F8)
+        static let slateBg2     = Color(hex: 0xE8F0F1)
+        static let slateChipBg  = Color(hex: 0xE2EFF0)
+        // Clay (rhythm-rest / warm) family
+        static let clayInk      = Color(hex: 0x5A4A2E)
+        static let clayInkAlt   = Color(hex: 0x7A6034)
+        static let clayText     = Color(hex: 0x8A7550)
+        static let clayMuted    = Color(hex: 0x9A8865)
+        static let clayLine     = Color(hex: 0xECE0CC)
+        static let clayOrb1     = Color(hex: 0xF0E2C8)
+        static let clayOrb2     = Color(hex: 0xE7D6B6)
+        static let clayOrbEdge  = Color(hex: 0xE6D5B4)
+        static let clayShadow   = Color(hex: 0x967846)
+        static let clayBg1      = Color(hex: 0xFAF6EE)
+        static let clayBg2      = Color(hex: 0xF2EAD9)
+        static let clayChipBg   = Color(hex: 0xF6EEDD)
+        static let clayChipEdge = Color(hex: 0xE6DAC6)
+        static let sand         = Color(hex: 0xECDFBE)
+        // Periwinkle (low-energy) family
+        static let periInk      = Color(hex: 0x4F5399)
+        static let periChipBg   = Color(hex: 0xDCDEF3)
     }
 
     // MARK: Typography

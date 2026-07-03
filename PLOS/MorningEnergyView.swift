@@ -65,7 +65,7 @@ struct MorningEnergyView: View {
                             .padding(.top, 2)
                         Text("依据：连续 3 晚睡得晚 · 高数考试还剩 **7 天**，先稳一稳。**不对？点上面任意一个改掉。**")
                             .font(.system(size: PLOS.FontScale.caption))
-                            .foregroundColor(Color(hex: 0x4F5399))
+                            .foregroundColor(PLOS.Palette.periInk)
                     }
                     .padding(.horizontal, 13)
                     .padding(.vertical, 12)

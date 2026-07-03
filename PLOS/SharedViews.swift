@@ -16,7 +16,7 @@ struct PhoneFrame: ViewModifier {
                 if hasNotch {
                     // Dynamic Island
                     RoundedRectangle(cornerRadius: 16)
-                        .fill(Color(hex: 0x0E1A14))
+                        .fill(PLOS.Palette.orbCore)
                         .frame(width: 104, height: 30)
                         .padding(.top, 11)
                 }
@@ -24,7 +24,7 @@ struct PhoneFrame: ViewModifier {
             .overlay(alignment: .bottom) {
                 // Home indicator
                 RoundedRectangle(cornerRadius: 3)
-                    .fill(Color(hex: 0x26302A).opacity(0.22))
+                    .fill(PLOS.Palette.ink.opacity(0.22))
                     .frame(width: 128, height: 5)
                     .padding(.bottom, 10)
             }
@@ -33,13 +33,13 @@ struct PhoneFrame: ViewModifier {
                 RoundedRectangle(cornerRadius: 46)
                     .fill(
                         LinearGradient(
-                            colors: [Color(hex: 0x22322B), Color(hex: 0x12201A)],
+                            colors: [PLOS.Palette.orbHi, PLOS.Palette.orbLo],
                             startPoint: .topLeading, endPoint: .bottomTrailing
                         )
                     )
             )
-            .shadow(color: Color(hex: 0x182A20).opacity(0.42), radius: 40, y: 24)
-            .shadow(color: Color(hex: 0x182A20).opacity(0.16), radius: 10, y: 26)
+            .shadow(color: PLOS.Palette.orbShadow.opacity(0.42), radius: 40, y: 24)
+            .shadow(color: PLOS.Palette.orbShadow.opacity(0.16), radius: 10, y: 26)
     }
 }
 
@@ -98,7 +98,7 @@ struct ScreenContainer<Content: View>: View {
             .clipShape(RoundedRectangle(cornerRadius: 36))
             .overlay(alignment: .bottom) {
                 RoundedRectangle(cornerRadius: 3)
-                    .fill(Color(hex: 0x26302A).opacity(0.22))
+                    .fill(PLOS.Palette.ink.opacity(0.22))
                     .frame(width: 128, height: 5)
                     .padding(.bottom, 10)
             }
@@ -107,13 +107,13 @@ struct ScreenContainer<Content: View>: View {
                 RoundedRectangle(cornerRadius: 46)
                     .fill(
                         LinearGradient(
-                            colors: [Color(hex: 0x22322B), Color(hex: 0x12201A)],
+                            colors: [PLOS.Palette.orbHi, PLOS.Palette.orbLo],
                             startPoint: .topLeading, endPoint: .bottomTrailing
                         )
                     )
             )
-            .shadow(color: Color(hex: 0x182A20).opacity(0.42), radius: 40, y: 24)
-            .shadow(color: Color(hex: 0x182A20).opacity(0.16), radius: 10, y: 26)
+            .shadow(color: PLOS.Palette.orbShadow.opacity(0.42), radius: 40, y: 24)
+            .shadow(color: PLOS.Palette.orbShadow.opacity(0.16), radius: 10, y: 26)
     }
 }
 
@@ -166,7 +166,7 @@ struct SecondaryButton: View {
                 if let sub = subtitle {
                     Text(sub)
                         .font(.system(size: 11.5, weight: .bold, design: .rounded))
-                        .foregroundColor(Color(hex: 0x436670))
+                        .foregroundColor(PLOS.Palette.teal)
                         .padding(.horizontal, 9)
                         .padding(.vertical, 3)
                         .background(
@@ -267,8 +267,8 @@ struct TaskRow: View {
                         .stroke(PLOS.Palette.hairline, lineWidth: 1)
                 )
         )
-        .shadow(color: Color(hex: 0x263A2C).opacity(0.06), radius: 6, y: 3)
-        .shadow(color: Color(hex: 0x263A2C).opacity(0.05), radius: 1, y: 1)
+        .shadow(color: PLOS.Palette.shadow.opacity(0.06), radius: 6, y: 3)
+        .shadow(color: PLOS.Palette.shadow.opacity(0.05), radius: 1, y: 1)
     }
 }
 
@@ -290,9 +290,9 @@ struct TagChip: View {
     }
 
     private var tagColor: Color {
-        if text.contains("落后") { return Color(hex: 0x8A6420) }
-        if text.contains("每日") { return Color(hex: 0x436670) }
-        if text.contains("考前") { return Color(hex: 0x8A6420) }
+        if text.contains("落后") { return PLOS.Palette.amberInk }
+        if text.contains("每日") { return PLOS.Palette.teal }
+        if text.contains("考前") { return PLOS.Palette.amberInk }
         return PLOS.Palette.ink2
     }
 

@@ -185,7 +185,7 @@ struct PlanIntView: View {
                 }
 
                 ForEach(vm.todayHealthNotes, id: \.self) { note in
-                    Text(note).font(.system(size: 12)).foregroundColor(Color(hex: 0x8A6420))
+                    Text(note).font(.system(size: 12)).foregroundColor(PLOS.Palette.amberInk)
                         .padding(10).background(RoundedRectangle(cornerRadius: 8).fill(PLOS.Palette.warnBg))
                 }
 
@@ -211,9 +211,9 @@ struct PlanIntView: View {
             Spacer().frame(height: 60)
             Image(systemName: "cup.and.saucer.fill").font(.system(size: 50)).foregroundColor(PLOS.Palette.clay)
             Text("今天是计划内的休息日")
-                .font(.system(size: PLOS.FontScale.title, weight: .bold)).foregroundColor(Color(hex: 0x5A4A2E))
+                .font(.system(size: PLOS.FontScale.title, weight: .bold)).foregroundColor(PLOS.Palette.clayInk)
             Text(vm.todayRestMessage)
-                .font(.system(size: PLOS.FontScale.body)).foregroundColor(Color(hex: 0x8A7550))
+                .font(.system(size: PLOS.FontScale.body)).foregroundColor(PLOS.Palette.clayText)
                 .multilineTextAlignment(.center)
             Spacer()
         }
@@ -225,12 +225,12 @@ struct PlanIntView: View {
             Spacer().frame(height: 60)
             Image(systemName: "moon.stars.fill").font(.system(size: 50)).foregroundColor(PLOS.Palette.slate)
             Text("今天先歇一下")
-                .font(.system(size: PLOS.FontScale.title, weight: .bold)).foregroundColor(Color(hex: 0x37545C))
+                .font(.system(size: PLOS.FontScale.title, weight: .bold)).foregroundColor(PLOS.Palette.slateInk)
             Text(vm.todayRestMessage)
-                .font(.system(size: PLOS.FontScale.body)).foregroundColor(Color(hex: 0x5C7C84))
+                .font(.system(size: PLOS.FontScale.body)).foregroundColor(PLOS.Palette.slateText)
                 .multilineTextAlignment(.center)
             Button("点错了？撤销") { vm.undoFlexRest() }
-                .font(.system(size: 13)).foregroundColor(Color(hex: 0x6F8F97))
+                .font(.system(size: 13)).foregroundColor(PLOS.Palette.slateMuted)
             Spacer()
         }
     }

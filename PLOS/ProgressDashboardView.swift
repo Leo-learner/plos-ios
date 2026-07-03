@@ -170,7 +170,7 @@ struct ProjectionRow: View {
     private var projectionColor: Color {
         if summary.projectedFinishPct >= summary.threshold { return PLOS.Palette.g500 }
         if summary.projectedFinishPct >= summary.threshold * 0.7 { return PLOS.Palette.amber }
-        return Color(hex: 0xB4842F)
+        return PLOS.Palette.amber
     }
 }
 
