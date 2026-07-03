@@ -1,0 +1,35 @@
+{
+  "state": {
+    "goals": [
+      {
+        "id": "math", "subject": "高数", "type": "deadline",
+        "target": "完成6章", "unit": "章", "total": 6, "done": 1.5,
+        "start": "2026-07-01", "deadline": "2026-07-30",
+        "importance": 1.2, "successThreshold": 0.8, "historyDelay": 1
+      },
+      {
+        "id": "eng", "subject": "英语", "type": "habit",
+        "target": "每天阅读", "unit": "天", "total": 30, "done": 12,
+        "start": "2026-07-01", "deadline": "2026-07-31",
+        "importance": 1.0, "successThreshold": 0.7, "historyDelay": 0
+      }
+    ],
+    "days": {
+      "2026-07-06": {
+        "date": "2026-07-06",
+        "dayType": "rhythmRest",
+        "energy": null,
+        "planned": [],
+        "reported": [],
+        "systemRan": true,
+        "note": null
+      }
+    },
+    "restStrategy": { "cycleStudy": 5, "cycleRest": 2, "flexRestTotal": 2, "flexUsed": 0 },
+    "events": [],
+    "health": { "lastExercise": null, "lateNights7d": 0, "highPressureStreak": 0 },
+    "streak": 6,
+    "backboneStudyDays": 0, "studyDaysTotal": 0, "studyDaysRemaining": 0, "studyDaysElapsed": 0
+  },
+  "today": "2026-07-06"
+}
