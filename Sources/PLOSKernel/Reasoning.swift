@@ -25,6 +25,7 @@ public enum Reasoning {
         // 2. For each item, build a main-push or benchmark sentence
         let goalMap = Dictionary(uniqueKeysWithValues: goals.map { ($0.id, $0) })
         let scoreMap = Dictionary(uniqueKeysWithValues: scores.map { ($0.goalId, $0) })
+        var usedSubjects = Set<String>()
 
         for item in items {
             if let score = scoreMap[item.goalId] {
@@ -37,10 +38,18 @@ public enum Reasoning {
                         progress: score.progress,
                         remainingDays: state.studyDaysRemaining
                     ))
-                } else {
+                    usedSubjects.insert(goalMap[item.goalId]?.subject ?? item.label)
+                }
+            }
+        }
+
+        for item in items {
+            if let score = scoreMap[item.goalId] {
+                let subjectName = goalMap[item.goalId]?.subject ?? item.label
+                if score.gap <= 0.05, !usedSubjects.contains(subjectName) {
                     // Benchmark: on track or ahead
                     parts.append(benchmarkSentence(
-                        subject: goalMap[item.goalId]?.subject ?? item.label,
+                        subject: subjectName,
                         units: item.plannedUnits,
                         unit: goalMap[item.goalId]?.unit ?? "",
                         remainingUnits: score.goal.total - score.goal.done,
@@ -61,8 +70,7 @@ public enum Reasoning {
         }
 
         // 4. Pre-exam sentence (if triggered)
-        let examTriggered = preExamSentence(context: context)
-        if let exam = examTriggered {
+        if let exam = preExamSentence(context: context) {
             parts.append(exam)
         }
 
