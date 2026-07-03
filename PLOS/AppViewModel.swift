@@ -164,12 +164,11 @@ final class AppViewModel {
     func generatePlan(energy: Energy) {
         guard let month = activeMonth else { return }
 
-        var state = month.toMonthState(today: today)
-        // Apply today's energy
         let day = todayDayEntity()
         day?.rawEnergy = energy.rawValue
         todayEnergy = energy
 
+        let state = month.toMonthState(today: today)
         let plan = Scheduler.plan(state: state, today: today)
 
         switch plan {
