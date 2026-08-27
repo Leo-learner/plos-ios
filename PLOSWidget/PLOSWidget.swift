@@ -2,6 +2,11 @@ import SwiftUI
 import WidgetKit
 
 // MARK: - §P.5: Lock/Home Screen Widget (today's first 2 items + streak)
+//
+// Data flows one way: the app writes a tiny summary into the shared App Group
+// UserDefaults (see PLOS/WidgetPublisher.swift) and reloads the timeline; the
+// widget only reads. Colors come from the shared DesignSystem.swift tokens —
+// this file is compiled together with it in the widget target.
 
 struct PLOSWidgetEntry: TimelineEntry {
     let date: Date
@@ -45,15 +50,15 @@ struct PLOSWidgetEntryView: View {
             HStack {
                 Image(systemName: "leaf.fill")
                     .font(.system(size: 13))
-                    .foregroundColor(Color(hex: 0x4E8262))
+                    .foregroundColor(PLOS.Palette.g500)
                 Text("PLOS")
                     .font(.system(size: 13, weight: .bold, design: .rounded))
-                    .foregroundColor(Color(hex: 0x30553F))
+                    .foregroundColor(PLOS.Palette.g700)
                 Spacer()
                 if entry.streak > 0 {
                     Text("\(entry.streak)天")
                         .font(.system(size: 11, weight: .bold, design: .rounded))
-                        .foregroundColor(Color(hex: 0x4E8262))
+                        .foregroundColor(PLOS.Palette.g500)
                 }
             }
 
@@ -62,38 +67,24 @@ struct PLOSWidgetEntryView: View {
                     if let i1 = entry.item1 {
                         Text(i1)
                             .font(.system(size: 12, weight: .semibold))
-                            .foregroundColor(Color(hex: 0x26302A))
+                            .foregroundColor(PLOS.Palette.ink)
                             .lineLimit(1)
                     }
                     if let i2 = entry.item2 {
                         Text(i2)
                             .font(.system(size: 11))
-                            .foregroundColor(Color(hex: 0x586159))
+                            .foregroundColor(PLOS.Palette.ink2)
                             .lineLimit(1)
                     }
                 }
             } else {
                 Text("打开生成今日计划")
                     .font(.system(size: 12))
-                    .foregroundColor(Color(hex: 0x8C958B))
+                    .foregroundColor(PLOS.Palette.ink3)
             }
         }
         .padding(14)
-        .background(Color(hex: 0xF6F8F2))
-        .containerBackground(.fill, for: .widget)
-    }
-}
-
-// Helper: Color from hex (embedded to avoid dependency on DesignSystem in widget extension)
-extension Color {
-    init(hex: UInt32, alpha: Double = 1) {
-        self.init(
-            .sRGB,
-            red: Double((hex >> 16) & 0xFF) / 255,
-            green: Double((hex >> 8) & 0xFF) / 255,
-            blue: Double(hex & 0xFF) / 255,
-            opacity: alpha
-        )
+        .containerBackground(PLOS.Palette.paper, for: .widget)
     }
 }
 
@@ -116,29 +107,5 @@ struct PLOSWidget: Widget {
 struct PLOSWidgetBundle: WidgetBundle {
     var body: some Widget {
         PLOSWidget()
-    }
-}
-
-// MARK: - Helper for AppViewModel to publish widget data
-
-extension AppViewModel {
-    /// Write today's plan summary to shared UserDefaults for widget consumption.
-    func updateWidgetData() {
-        guard let defaults = UserDefaults(suiteName: "group.com.plos.app") else { return }
-        defaults.set(todayStreak, forKey: "widget_streak")
-        defaults.set(!todayPlannedItems.isEmpty, forKey: "widget_has_plan")
-        if todayPlannedItems.count >= 1 {
-            let i1 = todayPlannedItems[0]
-            defaults.set("\(i1.label) · \(i1.minutes) min", forKey: "widget_item1")
-        } else {
-            defaults.removeObject(forKey: "widget_item1")
-        }
-        if todayPlannedItems.count >= 2 {
-            let i2 = todayPlannedItems[1]
-            defaults.set("\(i2.label) · \(i2.minutes) min", forKey: "widget_item2")
-        } else {
-            defaults.removeObject(forKey: "widget_item2")
-        }
-        defaults.synchronize()
     }
 }
