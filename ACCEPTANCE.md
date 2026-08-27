@@ -244,6 +244,48 @@ xcodebuild -project PLOS.xcodeproj -scheme PLOS \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test   # L1 走查（5）
 ```
 
+---
+
+## 真机安装（免费个人开发者账号，2026-08-28 实测通过）
+
+Team `CKM8WSGFU2`（个人免费账号）。**免费账号不支持 App Groups**，工程默认的
+`group.com.plos.app` 会让签名直接失败：
+
+```
+error: Provisioning profile "iOS Team Provisioning Profile: com.plos.app" doesn't match
+the entitlements file's value for the com.apple.security.application-groups entitlement.
+```
+
+因此真机构建用 `Signing/FreeTeam.entitlements`（空 dict）覆盖两个 target 的
+entitlements。代价仅限小组件：没有 App Group 通道，桌面小组件会一直显示
+「打开生成今日计划」占位；**主 App 全部功能不受影响**（数据全在本地 SwiftData）。
+升级到付费账号（$99/年）后去掉该覆盖即可恢复小组件数据。
+
+```bash
+# 1. 查设备 UDID
+xcrun devicectl list devices
+
+# 2. 构建（DEVICE_ID 换成上一步的 Identifier）
+xcodebuild -project PLOS.xcodeproj -scheme PLOS \
+  -destination "platform=iOS,id=$DEVICE_ID" -allowProvisioningUpdates \
+  -derivedDataPath build-device \
+  DEVELOPMENT_TEAM=CKM8WSGFU2 CODE_SIGN_STYLE=Automatic \
+  CODE_SIGN_ENTITLEMENTS='Signing/FreeTeam.entitlements' build
+
+# 3. 安装
+xcrun devicectl device install app --device "$DEVICE_ID" \
+  build-device/Build/Products/Debug-iphoneos/PLOS.app
+
+# 4. 启动（首装前须先在手机上信任证书，见下）
+xcrun devicectl device process launch --device "$DEVICE_ID" com.plos.app
+```
+
+**首次安装后必须手动信任一次**，否则第 4 步报
+`its profile has not been explicitly trusted by the user`：
+手机 → 设置 → 通用 → VPN与设备管理 → 开发者App → 信任该开发者证书。
+
+免费证书 **7 天过期**，App 会打不开；重跑第 2–3 步即可续签（信任无需重做）。
+
 ## 影子构建（无 xcodebuild 时的全量类型检查——可复用的招）
 临时向 Package.swift 加 `.target(name: "PLOSAppCheck", dependencies: ["PLOSKernel"], path: "PLOS")`，然后：
 ```
