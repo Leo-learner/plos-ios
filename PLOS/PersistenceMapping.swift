@@ -106,7 +106,7 @@ extension MonthEntity {
 
     /// Compute consecutive systemRan days ending at (or before) `today`.
     func computeStreak(today: Date) -> Int {
-        let cal = Calendar(identifier: .gregorian)
+        let cal = RestSchedule.calendar
         let todayStr = RestSchedule.dateString(today)
         // Build a lookup of systemRan = true
         let ranSet = Set(days.filter { $0.systemRan }.map { $0.date })

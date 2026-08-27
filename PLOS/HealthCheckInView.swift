@@ -74,12 +74,15 @@ struct HealthCheckInView: View {
 
 extension AppViewModel {
     func updateHealth(exercisedToday: Bool, lateNights7d: Int) {
-        guard let ctx = modelContext else { return }
-        // Store as a simple dict in UserDefaults (lightweight, doesn't need SwiftData)
+        // Lightweight manual data — UserDefaults, not SwiftData.
         let defaults = UserDefaults.standard
-        defaults.set(exercisedToday ? Date().timeIntervalSince1970 : 0, forKey: "health_last_exercise")
+        if exercisedToday {
+            // Kernel-canonical day (midnight UTC of the local calendar day) so the
+            // kernel's "days since exercise" math is exact across time zones.
+            let canonical = RestSchedule.canonicalDate(from: Date(), in: .current)
+            defaults.set(canonical.timeIntervalSince1970, forKey: "health_last_exercise")
+        }
         defaults.set(lateNights7d, forKey: "health_late_nights_7d")
-        defaults.synchronize()
     }
 
     /// Assemble a Health struct from stored manual data, for kernel consumption.

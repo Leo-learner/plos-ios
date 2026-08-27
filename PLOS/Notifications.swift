@@ -2,12 +2,21 @@ import Foundation
 import SwiftUI
 import UserNotifications
 
+extension Notification.Name {
+    /// Posted when the user taps a PLOS notification; userInfo["category"] = "MORNING"/"EVENING".
+    static let plosNotificationTap = Notification.Name("plosNotificationTap")
+}
+
 // MARK: - Local Notifications
 
 @MainActor
 final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
 
     static let shared = NotificationManager()
+
+    /// Category of a notification tapped before the UI finished appearing (cold start).
+    /// ContentView consumes this on appear; warm taps arrive via `.plosNotificationTap`.
+    var pendingCategory: String?
 
     override private init() {
         super.init()
@@ -79,6 +88,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
             content.title = "生成今日计划"
             content.body = "早上好！打开 PLOS 看看今天学什么。"
             content.sound = .default
+            content.categoryIdentifier = "MORNING"
             let request = UNNotificationRequest(identifier: "morning-plan",
                                                 content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request)
@@ -93,6 +103,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
             content.title = "一分钟汇报今天"
             content.body = "睡前花一分钟拖动滑块，明天系统接着今天重新排。"
             content.sound = .default
+            content.categoryIdentifier = "EVENING"
             let request = UNNotificationRequest(identifier: "evening-report",
                                                 content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request)
@@ -104,7 +115,14 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter,
                                              didReceive response: UNNotificationResponse,
                                              withCompletionHandler completionHandler: @escaping () -> Void) {
-        // Deep-link: notification category ID can be used by app to navigate.
+        // P5 deep link: route by category. Stored for cold starts (UI not yet subscribed),
+        // broadcast for warm taps.
+        let category = response.notification.request.content.categoryIdentifier
+        Task { @MainActor in
+            NotificationManager.shared.pendingCategory = category
+            NotificationCenter.default.post(name: .plosNotificationTap, object: nil,
+                                            userInfo: ["category": category])
+        }
         completionHandler()
     }
 }

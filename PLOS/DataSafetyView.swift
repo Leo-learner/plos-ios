@@ -86,6 +86,7 @@ struct DataSafetyView: View {
                         ["goalId": r.goalId, "completionPct": r.completionPct] as [String: Any]
                     },
                     "note": day.note ?? "",
+                    "reasoning": day.reasoning ?? "",
                 ] as [String: Any]
             },
             "events": month.events.map { ["type": $0.eventType, "subject": $0.subject, "date": $0.date] },
@@ -148,7 +149,8 @@ struct DataSafetyView: View {
                                     rawDayType: d["dayType"] as? String ?? "study",
                                     rawEnergy: d["energy"] as? String,
                                     systemRan: d["systemRan"] as? Bool ?? false,
-                                    note: d["note"] as? String)
+                                    note: d["note"] as? String,
+                                    reasoning: (d["reasoning"] as? String).flatMap { $0.isEmpty ? nil : $0 })
                 day.month = month
                 vm.modelContext?.insert(day)
                 if let plannedArr = d["planned"] as? [[String: Any]] {

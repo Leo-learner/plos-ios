@@ -20,6 +20,18 @@ struct GoalProgressSummary: Identifiable {
     let done: Double
 }
 
+/// P4: habit success = completed study days ÷ study days that have occurred (§1.4).
+struct HabitProgressSummary: Identifiable {
+    var id: String { goalId }
+    let goalId: String
+    let subject: String
+    let completedDays: Int
+    let studyDaysSoFar: Int
+    let threshold: Double       // successThreshold
+    var rate: Double { studyDaysSoFar > 0 ? Double(completedDays) / Double(studyDaysSoFar) : 0 }
+    var isPassed: Bool { rate >= threshold }
+}
+
 struct LoadSummary: Identifiable {
     var id: String { dateStr }
     let dateStr: String
@@ -64,10 +76,34 @@ extension AppViewModel {
         }
     }
 
+    /// P4: habit goals measured as "completed study days ÷ study days so far".
+    /// A day counts as completed when its report has completionPct > 0 for the habit (§1.9).
+    func computeHabitSummaries() -> [HabitProgressSummary] {
+        guard let month = activeMonth else { return [] }
+        let habitGoals = month.goals
+            .filter { $0.rawType == "habit" }
+            .sorted { $0.subject < $1.subject }
+        guard !habitGoals.isEmpty else { return [] }
+
+        // "yyyy-MM-dd" strings compare correctly as text.
+        let occurredStudyDays = month.days.filter { $0.rawDayType == "study" && $0.date <= todayStr }
+        return habitGoals.map { goal in
+            let completed = occurredStudyDays.filter { day in
+                day.reportItems.contains { $0.goalId == goal.uid && $0.completionPct > 0 }
+            }.count
+            return HabitProgressSummary(
+                goalId: goal.uid,
+                subject: goal.subject,
+                completedDays: completed,
+                studyDaysSoFar: occurredStudyDays.count,
+                threshold: goal.successThreshold
+            )
+        }
+    }
+
     /// Compute daily load summary for the month.
     func computeLoadHistory() -> [LoadSummary] {
         guard let month = activeMonth else { return [] }
-        let cal = Calendar(identifier: .gregorian)
         let (y, m, _) = RestSchedule.dateComponents(today)
         let n = RestSchedule.daysInMonth(year: y, month: m)
 
@@ -88,7 +124,6 @@ extension AppViewModel {
     /// Streak calendar data for the current month.
     func computeStreakCalendar() -> [StreakDay] {
         guard let month = activeMonth else { return [] }
-        let cal = Calendar(identifier: .gregorian)
         let (y, m, _) = RestSchedule.dateComponents(today)
         let n = RestSchedule.daysInMonth(year: y, month: m)
 

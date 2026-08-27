@@ -14,6 +14,15 @@ struct MonthSetupIntView: View {
 
     private var goals: [GoalEntity] { vm.activeMonth?.goals ?? [] }
 
+    /// Live preview (§2.1): recomputed from the steppers, not from the saved month.
+    private var previewBackbone: Int {
+        let (y, m, _) = RestSchedule.dateComponents(vm.today)
+        let strategy = RestStrategy(cycleStudy: studyDays, cycleRest: restDays,
+                                    flexRestTotal: flexTotal, flexUsed: 0)
+        return RestSchedule.backboneStudyDays(year: y, month: m, strategy: strategy)
+    }
+    private var previewGuaranteed: Int { previewBackbone - flexTotal }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
@@ -45,7 +54,7 @@ struct MonthSetupIntView: View {
                 }
 
                 // --- preview ---
-                IntPreviewCard(backbone: vm.backboneStudyDays, guaranteed: vm.studyDaysTotal,
+                IntPreviewCard(backbone: previewBackbone, guaranteed: previewGuaranteed,
                                study: studyDays, rest: restDays)
 
                 // --- confirm ---
@@ -63,6 +72,15 @@ struct MonthSetupIntView: View {
             .padding(.horizontal, 22).padding(.top, 18)
         }
         .background(PLOS.Palette.paper)
+        .navigationTitle("月计划")
+        .onAppear {
+            // Steppers mirror the saved month, not hard-coded defaults.
+            if let month = vm.activeMonth {
+                studyDays = month.cycleStudy
+                restDays = month.cycleRest
+                flexTotal = month.flexRestTotal
+            }
+        }
         .sheet(isPresented: $showAddGoal) {
             IntAddGoalSheet { subject, type, target, unit, total, deadline, imp, threshold in
                 vm.addGoal(GoalEntity(uid: UUID().uuidString.prefix(8).lowercased(),
@@ -83,7 +101,9 @@ struct MonthSetupIntView: View {
         let (y, m, _) = RestSchedule.dateComponents(vm.today)
         _ = vm.fetchOrCreateMonth(year: y, month: m, cycleStudy: studyDays,
                                    cycleRest: restDays, flexRestTotal: flexTotal)
-        vm.buildSkeleton()
+        // fetchOrCreateMonth keeps existing settings — push the (possibly changed)
+        // strategy through and re-lay the skeleton for history-free days.
+        vm.applyRestStrategy(cycleStudy: studyDays, cycleRest: restDays, flexRestTotal: flexTotal)
     }
 }
 

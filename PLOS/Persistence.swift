@@ -82,6 +82,9 @@ final class DayEntity {
     var rawEnergy: String?         // "high" | "normal" | "low"
     var systemRan: Bool
     var note: String?
+    /// Kernel reasoning for the day's plan — persisted so it survives relaunch.
+    /// Optional: rows written before this field existed migrate as nil.
+    var reasoning: String?
 
     @Relationship(deleteRule: .nullify) var plannedItems: [PlannedItemEntity] = []
     @Relationship(deleteRule: .nullify) var reportItems: [ReportItemEntity] = []
@@ -89,12 +92,13 @@ final class DayEntity {
     var month: MonthEntity?
 
     init(date: String, rawDayType: String, rawEnergy: String? = nil,
-         systemRan: Bool = false, note: String? = nil) {
+         systemRan: Bool = false, note: String? = nil, reasoning: String? = nil) {
         self.date = date
         self.rawDayType = rawDayType
         self.rawEnergy = rawEnergy
         self.systemRan = systemRan
         self.note = note
+        self.reasoning = reasoning
     }
 
     var dayType: String { rawDayType }
