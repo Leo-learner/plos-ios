@@ -45,8 +45,10 @@ public enum Rules {
         }
     }
 
-    /// Pre-exam light: if tomorrow has an exam for a subject → set REVIEW_CHUNK minutes,
-    /// label "只复习，不上新内容", and move to top.
+    /// Pre-exam light: if tomorrow has an exam for a subject → force REVIEW_CHUNK minutes,
+    /// label "只复习，不上新内容", and move to top. "强制" (§1.6) also means the review item
+    /// must exist: if the subject got no allocation today (on-track goals carry zero pressure),
+    /// a review item is inserted rather than silently skipped.
     public static func applyPreExam(
         items: [PlannedItem],
         context: RuleContext
@@ -54,7 +56,7 @@ public enum Rules {
         let todayDate = RestSchedule.parseDate(context.today)
         guard let todayDate else { return items }
 
-        let tomorrow = Calendar(identifier: .gregorian).date(byAdding: .day, value: 1, to: todayDate)!
+        let tomorrow = RestSchedule.calendar.date(byAdding: .day, value: 1, to: todayDate)!
         let tomorrowStr = RestSchedule.dateString(tomorrow)
 
         let examSubjects = Set(
@@ -65,12 +67,9 @@ public enum Rules {
 
         guard !examSubjects.isEmpty else { return items }
 
-        // Find which goal IDs map to exam subjects
-        let examGoalIds = Set(
-            context.goals
-                .filter { examSubjects.contains($0.subject) }
-                .map { $0.id }
-        )
+        // Find which goal IDs map to exam subjects (kept in goal order for determinism)
+        let examGoals = context.goals.filter { examSubjects.contains($0.subject) }
+        let examGoalIds = Set(examGoals.map { $0.id })
 
         var result = items.map { item -> PlannedItem in
             if examGoalIds.contains(item.goalId) {
@@ -80,6 +79,19 @@ public enum Rules {
                 return copy
             }
             return item
+        }
+
+        // Insert review items for exam subjects that got no allocation today.
+        // plannedUnits = 0: reviewing does not advance the goal's unit count (§1.9).
+        let presentIds = Set(result.map { $0.goalId })
+        for goal in examGoals where !presentIds.contains(goal.id) {
+            result.append(PlannedItem(
+                goalId: goal.id,
+                minutes: KernelConfig.reviewChunk,
+                label: "只复习，不上新内容",
+                plannedUnits: 0,
+                order: result.count
+            ))
         }
 
         // Move exam items to top
@@ -159,7 +171,7 @@ public enum Rules {
 
         if let lastExercise = context.health.lastExercise,
            let todayDate = RestSchedule.parseDate(context.today) {
-            let daysSince = Calendar(identifier: .gregorian)
+            let daysSince = RestSchedule.calendar
                 .dateComponents([.day], from: lastExercise, to: todayDate).day ?? 0
             if daysSince >= 4 {
                 notes.append("已连续\(daysSince)天未运动，建议今晚早点休息。")
@@ -180,7 +192,7 @@ public enum Rules {
     /// Look up yesterday's Day from the days dictionary given today's date string.
     public static func yesterday(from days: [String: Day], today: String) -> Day? {
         guard let todayDate = RestSchedule.parseDate(today) else { return nil }
-        let yesterdayDate = Calendar(identifier: .gregorian)
+        let yesterdayDate = RestSchedule.calendar
             .date(byAdding: .day, value: -1, to: todayDate)!
         let yesterdayStr = RestSchedule.dateString(yesterdayDate)
         return days[yesterdayStr]

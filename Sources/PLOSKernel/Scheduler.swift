@@ -107,14 +107,21 @@ public enum Scheduler {
             context: ruleContext
         )
 
-        // Step 7: Verify budget constraint
-        let totalMinutes = allItems.reduce(0) { $0 + $1.minutes }
+        // Step 7: Enforce the budget invariant — sum(minutes) ≤ budget, always.
+        // Shrink the largest item(s) down to MIN_CHUNK first; if everything is already
+        // at MIN_CHUNK and the sum still overflows, drop items from the end (lowest priority).
+        var totalMinutes = allItems.reduce(0) { $0 + $1.minutes }
         if totalMinutes > budget {
-            // Clamp: reduce the largest item
             var clamped = allItems
-            if let maxIdx = clamped.indices.max(by: { clamped[$0].minutes < clamped[$1].minutes }) {
-                let excess = totalMinutes - budget
-                clamped[maxIdx].minutes = max(clamped[maxIdx].minutes - excess, KernelConfig.minChunk)
+            while totalMinutes > budget, !clamped.isEmpty {
+                if let maxIdx = clamped.indices.max(by: { clamped[$0].minutes < clamped[$1].minutes }),
+                   clamped[maxIdx].minutes > KernelConfig.minChunk {
+                    let cut = min(clamped[maxIdx].minutes - KernelConfig.minChunk, totalMinutes - budget)
+                    clamped[maxIdx].minutes -= cut
+                    totalMinutes -= cut
+                } else {
+                    totalMinutes -= clamped.removeLast().minutes
+                }
             }
             allItems = clamped
         }

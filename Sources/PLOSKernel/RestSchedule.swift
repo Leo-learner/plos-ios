@@ -8,34 +8,51 @@ public enum RestSchedule {
 
     // MARK: - Calendar Helpers
 
+    /// Kernel-canonical calendar: Gregorian pinned to UTC. Every y/m/d ↔ Date conversion
+    /// inside the kernel goes through this, so the same `Date` value yields the same plan
+    /// on every host time zone. The app layer converts the user's local "today" into a
+    /// canonical Date via `canonicalDate(from:in:)` before calling the kernel.
+    public static let calendar: Calendar = {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(identifier: "UTC")!
+        return cal
+    }()
+
+    /// Map an arbitrary timestamp to the kernel-canonical Date (midnight UTC) of the
+    /// calendar day it falls on in `timeZone`. This is the app-layer boundary: pass the
+    /// user's time zone here, and the kernel stays time-zone-free beyond this point.
+    public static func canonicalDate(from date: Date, in timeZone: TimeZone) -> Date {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = timeZone
+        let c = cal.dateComponents([.year, .month, .day], from: date)
+        return dateFrom(c.year!, c.month!, c.day!)
+    }
+
     /// Returns the number of days in a given month (1-indexed).
     public static func daysInMonth(year: Int, month: Int) -> Int {
-        let cal = Calendar(identifier: .gregorian)
         var dc = DateComponents()
         dc.year = year
         dc.month = month
         dc.day = 1
-        guard let date = cal.date(from: dc),
-              let range = cal.range(of: .day, in: .month, for: date)
+        guard let date = calendar.date(from: dc),
+              let range = calendar.range(of: .day, in: .month, for: date)
         else { return 30 }
         return range.count
     }
 
-    /// Extracts year, month, day from a Date using Gregorian calendar.
+    /// Extracts year, month, day from a Date using the kernel-canonical calendar.
     public static func dateComponents(_ date: Date) -> (year: Int, month: Int, day: Int) {
-        let cal = Calendar(identifier: .gregorian)
-        let comps = cal.dateComponents([.year, .month, .day], from: date)
+        let comps = calendar.dateComponents([.year, .month, .day], from: date)
         return (comps.year!, comps.month!, comps.day!)
     }
 
     /// Date from year/month/day.
     public static func dateFrom(_ year: Int, _ month: Int, _ day: Int) -> Date {
-        let cal = Calendar(identifier: .gregorian)
         var dc = DateComponents()
         dc.year = year
         dc.month = month
         dc.day = day
-        return cal.date(from: dc)!
+        return calendar.date(from: dc)!
     }
 
     /// Format a Date as "yyyy-MM-dd".

@@ -27,16 +27,19 @@ public enum Reasoning {
         let scoreMap = Dictionary(uniqueKeysWithValues: scores.map { ($0.goalId, $0) })
         var usedSubjects = Set<String>()
 
+        // `scores` is sorted by pressure descending, so only its first entry may claim
+        // "压力最高" — every sentence has to stay literally true (§1.7).
+        let topPressureGoalId = scores.first?.goalId
+
         for item in items {
             if let score = scoreMap[item.goalId] {
                 if score.gap > 0.05 {
                     // Main push: subject is behind
                     parts.append(mainPushSentence(
-                        subject: item.label,
                         subjectName: goalMap[item.goalId]?.subject ?? item.label,
                         gap: score.gap,
-                        progress: score.progress,
-                        remainingDays: state.studyDaysRemaining
+                        remainingDays: state.studyDaysRemaining,
+                        isTopPressure: score.goalId == topPressureGoalId
                     ))
                     usedSubjects.insert(goalMap[item.goalId]?.subject ?? item.label)
                 }
@@ -119,16 +122,18 @@ public enum Reasoning {
         }
     }
 
-    /// [主推句] Subject is behind schedule.
+    /// [主推句] Subject is behind schedule. Only the highest-pressure goal claims the top spot.
     private static func mainPushSentence(
-        subject: String,
         subjectName: String,
         gap: Double,
-        progress: Double,
-        remainingDays: Int
+        remainingDays: Int,
+        isTopPressure: Bool
     ) -> String {
         let gapPct = Int(gap * 100)
-        return "\(subjectName)落后节奏\(gapPct)%、保底剩余学习日\(remainingDays)天、压力最高，今日优先。"
+        if isTopPressure {
+            return "\(subjectName)落后节奏\(gapPct)%、保底剩余学习日\(remainingDays)天、压力最高，今日优先。"
+        }
+        return "\(subjectName)同样落后\(gapPct)%，今日一并推进。"
     }
 
     /// [让位句] Subject passed threshold, yielding to others.
@@ -156,14 +161,14 @@ public enum Reasoning {
         return "\(subject)按基准推进：今日\(uStr)\(u)（剩余\(rStr)\(u)÷\(days)天）。"
     }
 
-    /// [考前句] Tomorrow has an exam — only review.
+    /// [考前句] Tomorrow has an exam — only review (REVIEW_CHUNK minutes, so the sentence carries a number).
     private static func preExamSentence(context: RuleContext) -> String? {
         guard let todayDate = RestSchedule.parseDate(context.today) else { return nil }
-        let tomorrow = Calendar(identifier: .gregorian).date(byAdding: .day, value: 1, to: todayDate)!
+        let tomorrow = RestSchedule.calendar.date(byAdding: .day, value: 1, to: todayDate)!
         let tomorrowStr = RestSchedule.dateString(tomorrow)
 
         let exams = context.events.filter { $0.type == "exam" && $0.date == tomorrowStr }
         guard let exam = exams.first else { return nil }
-        return "明天\(exam.subject)考试，今日只安排复习，不上新内容。"
+        return "明天\(exam.subject)考试，今日只安排\(KernelConfig.reviewChunk)分钟复习，不上新内容。"
     }
 }

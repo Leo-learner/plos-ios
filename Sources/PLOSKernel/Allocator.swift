@@ -25,10 +25,13 @@ public enum Allocator {
     ) -> AllocationResult {
         let budget = KernelConfig.budget[energy] ?? 100
 
-        // Step 1: Habits get fixed chunks
+        // Step 1: Habits get fixed chunks — but never past the budget.
+        // Deterministic truncation: habits are admitted in goal order until the next
+        // chunk would overflow (e.g. low day 45 min ÷ 15 min chunks → at most 3 habits).
         var habitItems: [PlannedItem] = []
         var habitCost = 0
         for (idx, habit) in habits.enumerated() {
+            if habitCost + KernelConfig.habitChunk > budget { break }
             let item = PlannedItem(
                 goalId: habit.id,
                 minutes: KernelConfig.habitChunk,
@@ -42,8 +45,7 @@ public enum Allocator {
 
         var remainingBudget = max(budget - habitCost, 0)
 
-        // Step 2: Filter out scores that would get less than MIN_CHUNK
-        var eligibleScores = scores.filter { _ in true }
+        var eligibleScores = scores
 
         // Low-energy: keep only top 1–2 pressure items + habits
         if energy == .low {
@@ -54,6 +56,17 @@ public enum Allocator {
         // Step 3: Distribute remaining budget by pressure share
         let totalPressure = eligibleScores.reduce(0.0) { $0 + $1.pressure }
         var allocatedItems: [PlannedItem] = []
+
+        // Baseline alignment (§1.5 "向 baseline_today 看齐"): each goal's cap is its
+        // share of the post-habit budget by NORMALIZED remaining need — baselineToday/total,
+        // a unitless per-day fraction — so subjects with different units (章 vs 题) compare
+        // fairly, and passed-threshold goals (small remaining fraction) naturally yield.
+        // (The old formula compared units against minutes and collapsed every cap below
+        // MIN_CHUNK early in the month, leaving habit-only plans.)
+        let shareBudget = remainingBudget
+        let totalNormBaseline = eligibleScores.reduce(0.0) {
+            $0 + max($1.baselineToday, 0) / max($1.goal.total, 1e-9)
+        }
 
         for (order, score) in eligibleScores.enumerated() {
             if remainingBudget < KernelConfig.minChunk { break }
@@ -68,15 +81,11 @@ public enum Allocator {
 
             var rawMinutes = Int((Double(remainingBudget) * pressureShare).rounded())
 
-            // Cap 1: align to baseline_today equivalent
-            // baselineToday is in goal-units/day, convert to minutes by ratio:
-            // If a subject needs baselineToday units today, cap at MAX_CHUNK or
-            // the equivalent of baselineToday (whichever is smaller)
             let baselineAlignedMinutes: Int
-            if score.baselineToday > 0 {
-                // baselineToday as a proportion of total → scale to budget
-                let proportion = score.baselineToday / max(score.goal.total, 1e-9)
-                baselineAlignedMinutes = min(Int(proportion * Double(budget)), KernelConfig.maxChunk)
+            let normBaseline = max(score.baselineToday, 0) / max(score.goal.total, 1e-9)
+            if normBaseline > 0, totalNormBaseline > 1e-9 {
+                let fairShare = Double(shareBudget) * normBaseline / totalNormBaseline
+                baselineAlignedMinutes = min(Int(fairShare.rounded()), KernelConfig.maxChunk)
             } else {
                 baselineAlignedMinutes = KernelConfig.maxChunk
             }

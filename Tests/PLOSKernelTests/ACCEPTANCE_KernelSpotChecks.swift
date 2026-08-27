@@ -180,9 +180,9 @@ final class ACCEPTANCE_KernelSpotChecks: XCTestCase {
         }
     }
 
-    /// Documents a latent defect: when habit_count * HABIT_CHUNK > budget, sum(minutes) exceeds BUDGET,
-    /// because habits are always emitted at HABIT_CHUNK and Scheduler's one-item clamp cannot recover it.
-    func test_ACCEPTANCE_d2_budgetExceeded_whenManyHabits_DOCUMENTS_BUG() {
+    /// P3 fix verified: when habit_count * HABIT_CHUNK would exceed the budget, habits are
+    /// truncated deterministically (goal order) so the budget invariant always holds.
+    func test_ACCEPTANCE_d2_budgetHolds_withManyHabits() {
         let habits = (1...4).map { i in
             Goal(id: "h\(i)", subject: "习惯\(i)", type: .habit, target: "", unit: "天",
                  total: 30, done: 0, start: RestSchedule.dateFrom(2026, 7, 1),
@@ -193,9 +193,12 @@ final class ACCEPTANCE_KernelSpotChecks: XCTestCase {
             XCTFail("expected study plan"); return
         }
         let total = items.reduce(0) { $0 + $1.minutes }
-        // 4 habits * 15 = 60 > 45. This assertion PASSING confirms the budget invariant is violated.
-        XCTAssertGreaterThan(total, KernelConfig.budget[.low]!,
-                             "KNOWN DEFECT: sum(minutes)=\(total) exceeds low BUDGET 45 with 4 habits")
+        // 4 habits * 15 = 60 > 45 → only the first 3 habits fit (45 min).
+        XCTAssertLessThanOrEqual(total, KernelConfig.budget[.low]!,
+                                 "sum(minutes)=\(total) must never exceed low BUDGET 45")
+        XCTAssertEqual(items.count, 3, "only the first 3 habits fit into 45 min")
+        XCTAssertEqual(items.map(\.goalId), ["h1", "h2", "h3"],
+                       "habit truncation must be deterministic in goal order")
     }
 
     // MARK: - (e) Determinism: same (state, today) → byte-identical output, repeated
@@ -239,9 +242,10 @@ final class ACCEPTANCE_KernelSpotChecks: XCTestCase {
         XCTAssertEqual(d3, 3.0, accuracy: 1e-9, "0% keeps done unchanged")
     }
 
-    /// Documents that a habit item carries plannedUnits == 0, so the §1.9 increment is always 0 —
-    /// a habit's `done` can never advance through the evening report.
-    func test_ACCEPTANCE_f2_habitPlannedUnitsZero_DOCUMENTS_GAP() {
+    /// By design (§1.4): a habit item carries plannedUnits == 0 — its `done` is untouched by the
+    /// §1.9 unit conversion. Habit success is measured as "completed study days ÷ study days so far",
+    /// which the app layer computes from report records (completionPct > 0 on a study day).
+    func test_ACCEPTANCE_f2_habitPlannedUnitsZero_byDesign() {
         let habit = Goal(id: "eng", subject: "英语", type: .habit, target: "", unit: "天",
                          total: 30, done: 10, start: RestSchedule.dateFrom(2026, 7, 1),
                          deadline: RestSchedule.dateFrom(2026, 7, 31))
@@ -251,6 +255,74 @@ final class ACCEPTANCE_KernelSpotChecks: XCTestCase {
         let after = applyEvening(done: habit.done, total: habit.total,
                                  completionPct: 100, plannedUnits: alloc.habitItems[0].plannedUnits)
         XCTAssertEqual(after, habit.done, accuracy: 1e-9,
-                       "KNOWN GAP: habit done never advances via §1.9 (increment always 0)")
+                       "habit done stays fixed under §1.9 — day-count metric lives in the app layer")
+    }
+
+    // MARK: - (g) P7: kernel output must not depend on the host time zone
+
+    func test_ACCEPTANCE_g_timezoneIndependence() {
+        // 2026-07-03T23:30:00Z. On any UTC+ host (e.g. Asia/Shanghai) this instant is already
+        // July 4 in local time — the pre-fix kernel (implicit TimeZone.current) would read it
+        // as (2026, 7, 4) on such a host. The canonical calendar must read UTC: (2026, 7, 3).
+        let instant = Date(timeIntervalSince1970: 1_783_121_400)
+        let (y, m, d) = RestSchedule.dateComponents(instant)
+        XCTAssertEqual([y, m, d], [2026, 7, 3], "kernel reads y/m/d in UTC, not the host zone")
+        XCTAssertEqual(RestSchedule.dateString(instant), "2026-07-03")
+
+        // String round-trip is exact.
+        XCTAssertEqual(RestSchedule.dateString(RestSchedule.parseDate("2026-02-28")!), "2026-02-28")
+
+        // App boundary: canonicalDate maps a timestamp to the *local* calendar day, pinned to UTC.
+        let beijing = TimeZone(secondsFromGMT: 8 * 3600)!
+        XCTAssertEqual(RestSchedule.canonicalDate(from: instant, in: beijing),
+                       RestSchedule.dateFrom(2026, 7, 4),
+                       "23:30Z is 07:30 next day in UTC+8 → canonical day is July 4")
+        XCTAssertEqual(RestSchedule.canonicalDate(from: instant, in: TimeZone(identifier: "UTC")!),
+                       RestSchedule.dateFrom(2026, 7, 3))
+
+        // Same canonical today → byte-identical plan, regardless of which zone produced it.
+        let (state, _) = studyState(day: 4, energy: .normal)
+        let todayViaBeijing = RestSchedule.canonicalDate(from: instant, in: beijing)
+        let enc = JSONEncoder(); enc.outputFormatting = [.sortedKeys]
+        XCTAssertEqual(try! enc.encode(Scheduler.plan(state: state, today: todayViaBeijing)),
+                       try! enc.encode(Scheduler.plan(state: state, today: RestSchedule.dateFrom(2026, 7, 4))))
+    }
+
+    // MARK: - (i) §1.7: at most one subject may be called "压力最高"
+
+    func test_ACCEPTANCE_i_singleTopPressureClaim() {
+        // Two behind-schedule subjects: both get a push sentence, but the claim
+        // "压力最高" is only true for one of them.
+        let (state, today) = studyState(day: 20, energy: .normal)
+        guard case let .study(_, reasoning, _) = Scheduler.plan(state: state, today: today) else {
+            XCTFail("expected study plan"); return
+        }
+        let claims = reasoning.components(separatedBy: "压力最高").count - 1
+        XCTAssertLessThanOrEqual(claims, 1, "only the top-pressure subject may claim 压力最高")
+        XCTAssertTrue(reasoning.contains("落后"), "behind-schedule subjects still get a push sentence")
+        for sentence in reasoning.components(separatedBy: "。") where !sentence.isEmpty {
+            XCTAssertNotNil(sentence.rangeOfCharacter(from: .decimalDigits),
+                            "every sentence must contain a number: '\(sentence)'")
+        }
+    }
+
+    // MARK: - (h) P8: pre-exam reasoning sentence carries a number
+
+    func test_ACCEPTANCE_h_preExamSentenceHasNumber() {
+        let events = [Event(type: "exam", subject: "线代", date: "2026-07-04")]
+        let (state, today) = studyState(day: 3, energy: .normal, events: events)
+        guard case let .study(items, reasoning, _) = Scheduler.plan(state: state, today: today) else {
+            XCTFail("expected study plan"); return
+        }
+        XCTAssertTrue(reasoning.contains("考试"), "pre-exam sentence must appear")
+        XCTAssertTrue(reasoning.contains("\(KernelConfig.reviewChunk)分钟"),
+                      "pre-exam sentence must carry the REVIEW_CHUNK number")
+        // The general rule still holds with the exam branch active: every sentence has a digit.
+        for sentence in reasoning.components(separatedBy: "。") where !sentence.isEmpty {
+            XCTAssertNotNil(sentence.rangeOfCharacter(from: .decimalDigits),
+                            "every sentence must contain a number: '\(sentence)'")
+        }
+        // And the exam subject was forced down to REVIEW_CHUNK minutes at the top.
+        XCTAssertEqual(items.first?.minutes, KernelConfig.reviewChunk)
     }
 }

@@ -469,7 +469,7 @@ final class PLOSKernelTests: XCTestCase {
             }
             return false
         }
-        XCTAssertLessThanOrEqual(deadlineItems.count, 3, "Low energy should keep ≤2-3 deadline/milestone items")
+        XCTAssertLessThanOrEqual(deadlineItems.count, 2, "Low energy must keep ≤2 deadline/milestone items (§1.5)")
 
         let totalMin = items.reduce(0) { $0 + $1.minutes }
         XCTAssertLessThanOrEqual(totalMin, 45, "Low energy budget is 45 min")
