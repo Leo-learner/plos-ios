@@ -163,3 +163,91 @@ xcodebuild build (iPhone 17 Pro) → ** BUILD SUCCEEDED **  0 error / 4 warning
   - `e4a60cd` C2：`Sources/PLOSKernel/Rules.swift`（去 `Date()` 兜底）。
 - 均在 `master` 分支；未 push。P3–P10 与 L1 走查未做，等你决定。
 - 除上述外**未改动其它业务逻辑**；调色为等值替换，视觉零变化。
+
+---
+
+# 2026-08-27 完工阶段（P3–P10 全部修复 + 接线补全）
+
+> 本节记录第二轮完工工作。内核 `swift test` **40/40 全绿**；App 与 Widget 全部源码经
+> iOS 模拟器 SDK 交叉类型检查 **0 error / 0 warning**（方法见文末"影子构建"）。
+> xcodebuild 全量构建与模拟器 L1 走查在会话时因权限分类器依赖的代理端点故障未能执行，
+> 命令队列见文末"待执行"。
+
+## 修复清单（本轮全部落地）
+
+### 内核（PLOSKernel — 全部有测试护栏）
+| 项 | 修复 | 测试 |
+|---|---|---|
+| P3 预算溢出 | Allocator 按预算确定性截断 habit（goal 顺序）；Scheduler Step 7 改为"压最大项至 MIN_CHUNK → 仍超则从队尾丢弃"的硬不变量 | `test_ACCEPTANCE_d2_budgetHolds_withManyHabits` |
+| P7 时区隐式依赖 | 内核日历钉死 UTC（`RestSchedule.calendar`）；新增 `canonicalDate(from:in:)` 作为 App 边界归一化入口 | `test_ACCEPTANCE_g_timezoneIndependence`（在东八区主机上修复前必挂） |
+| P8 考前句无数字 | 考前句携带 REVIEW_CHUNK 数字：「只安排20分钟复习」 | `test_ACCEPTANCE_h_preExamSentenceHasNumber` |
+| 新发现：考前科目无项 | 该科当日无分配（on-track → pressure 0 → 全被基准上限压掉）时，§1.6 的"强制"落空。现在缺项则**插入**复习项（plannedUnits=0） | 同上 |
+| P9 判据偏松 | 低谷日断言 ≤3 → ≤2 | `testFixture2LowEnergy` |
+| **新发现（重大）：基准上限单位错配** | 旧公式 `proportion×budget`（proportion=baselineToday/total）把"占总工作量比例"当"占预算比例"，**月初 rem 大时全部科目 cap<15 被丢弃 → 100 分钟的日子只剩 15 分钟 habit**。38 个旧测试没抓到（夹具全是临近截止/严重落后场景）。新公式：按归一化剩余需求（baselineToday/total，无量纲）分摊扣除 habit 后的预算，单位公平、达标科目自然让位 | `PLOSAppTests` 全套（真实"月初新目标"场景）+ 内核 40 项回归 |
+
+### 新增：App 层无头集成测试（`Tests/PLOSAppTests` — L1 数据链路自动化）
+Package.swift 常驻 `PLOSAppCheck`（App 源码作 SwiftPM library target）+ `PLOSAppTests`。
+内存 SwiftData 容器 + 注入 `today`，纯 `swift test` 即可跑 L1 的数据闭环（9 项）：
+建月骨架 31 天 / 三能量预算上限 / 计划与 reasoning 持久化重启恢复 / §1.9 折叠与重存幂等 /
+habit 完成学习日计数 / 全 0% 无惩罚 / 次日「接昨天」连续性 + streak 累计 / 灵活休息用与撤销 /
+节奏休息日短路 systemRan / 月中改节奏保历史重铺 / 跨月继承节奏。
+（`PLOSIntApp` 的 `@main` 在 `SWIFT_PACKAGE` 下条件移除，避免与 XCTest runner 冲突。）
+**当前状态：`swift test` 49/49 全绿（内核 40 + App 集成 9）。**
+
+### App 层（比 7-03 清单多出的真问题都在走查预判中修掉）
+- **P4 habit 进度**：`goal.done` 对 habit 不再无效累加；达标率 = 完成学习日 ÷ 已发生学习日（§1.4），进度面板新增「习惯」区块（`computeHabitSummaries`）。
+- **汇报重复保存重复累加（数据损坏）**：`saveEveningReport` 改为对全月汇报记录的**幂等折叠**：`done = min(total, Σ pct×当日plannedUnits)`；重开汇报页回显已存滑块值（`restoreExistingReport`）。
+- **P5 通知深链**：`didReceive` 按 categoryIdentifier 路由（EVENING → 汇报页；冷启动经 `pendingCategory` 兜底）；`updateSchedule` 补上丢失的 categoryIdentifier；新增 `NotificationSettingsView`（§5.7 设置页，`updateSchedule` 首个调用方）。
+- **孤儿视图接线**：Tab2 由 ProgressStubView 换成真 `ProgressDashboardView`；`EveningReportIntView` 获得入口（计划页底部 CTA + 深链）；Events/Health/DataSafety/提醒设置 挂到进度页设置区。
+- **健康数据断路**：`currentHealth()` 此前从未被消费——`generatePlan` 现在注入 `state.health`；打卡存储改内核规范日（P7 边界）；不再因未勾选运动而清空历史。
+- **跨午夜**：`advanceToTodayIfNeeded()` + scenePhase.active 触发；支持跨月（沿用上月节奏参数建新月）。
+- **月中改节奏不生效**：`applyRestStrategy` 落库 + `buildSkeleton` 对无历史的日子重铺骨架；保底预览改为随步进器**实时计算**（§2.1）；步进器回显已存月配置。
+- **重新选能量**：计划生成后可一键清空重选（L1 走查第 2 项的前置条件）。
+- **reasoning 持久化**：`DayEntity.reasoning`（可选字段，轻量迁移），杀 App 重启后信任锚不丢；随导出/导入。
+- **streak 日历星期偏移**：1 号对齐真实星期列。
+- **P10**：4 处 unused-variable warning 清零（交叉类型检查 0 warning 佐证）。
+- **P6 小组件**：`PLOSWidget.swift` 拆出 App 侧 `WidgetPublisher.swift`（写 App Group + `reloadAllTimelines`，计划/汇报/休息/跨日均触发）；widget 色值全部改引共享 `DesignSystem.swift` token（hex 归零）；`project.yml` 新增 widget target（App Group entitlements、NSExtension、App 内嵌）。
+
+## 收尾执行结果（2026-08-28，全部完成）
+
+| 步骤 | 结果 |
+|---|---|
+| `xcodegen generate` | ✅ widget + UI test target 已写入工程 |
+| `swift test` | ✅ **50/50**（内核 41 + App 集成 9） |
+| `xcodebuild build` | ✅ **BUILD SUCCEEDED，0 error / 0 warning** |
+| 模拟器冷启动 | ✅ iPhone 17 Pro / iOS 26.5，无崩溃 |
+| **L1 走查** | ✅ **XCUITest 5/5 全通过**，截图留档 |
+
+### L1 走查自动化（`PLOSUITests` — 原"需人工确认"清单已转为回归测试）
+`-plosToday` 钉住日期、`-plosResetStore` 清库、`-plosSkipNotificationPrompt` 跳过授权弹窗，
+使走查在任何真实日期都可重复执行：
+
+| 用例 | 覆盖 |
+|---|---|
+| test01 空态与建月 | 空态 CTA 存在**且未被浮动 TabBar 遮挡**（isHittable）；保底学习日预览实测 21/骨架 23 |
+| test02 学习日闭环 | 三能量选项 → 生成计划（100 分钟精确用满）→ reasoning 卡含预算数字 → 汇报入口可点 → 滑块汇报 → streak 计为 1 天 |
+| test03 进度面板 | 各科完成率 + **习惯·完成学习日占比（P4）** + 提醒设置页可达且开关存在 |
+| test04 节奏休息日 | 休息卡短路、无能量选择器、"系统仍在运行"文案 |
+| test05 灵活休息 | 花额度 → 剩余1个 → 撤销回到学习日 |
+
+### 走查中发现并修复的三个缺陷（测试之外只有"看"才能抓到）
+1. **App 被信箱式压缩渲染**（缺 `UILaunchScreen` → iOS 兼容模式）：窗口缩小、内容与浮动 TabBar 碰撞。修：`INFOPLIST_KEY_UILaunchScreen_Generation`。
+2. **主 CTA 被 TabBar 遮挡**：滚动内容缺底部留白，首屏够不到"去建月目标"。修：底部 40pt 留白；测试以 `isHittable` 永久防回归。
+3. **reasoning 事实错误**：两个落后科目**都自称"压力最高"**（§1.7 要求每句为真）。修：仅压力最高者用该句式，其余为「同样落后X%，今日一并推进」；`test_ACCEPTANCE_i` 断言该短语最多出现一次。
+> 附带修复：`advanceToTodayIfNeeded()` 会在前台刷新时把注入日期覆盖回真实日期，使任何钉住日期的测试静默失效。改为 `pinnedToday` 优先。
+
+### 复现命令
+```
+cd /Users/leo/Desktop/01-项目/plos-ios
+swift test                                   # 内核 + App 集成（50）
+xcodebuild -project PLOS.xcodeproj -scheme PLOS \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test   # L1 走查（5）
+```
+
+## 影子构建（无 xcodebuild 时的全量类型检查——可复用的招）
+临时向 Package.swift 加 `.target(name: "PLOSAppCheck", dependencies: ["PLOSKernel"], path: "PLOS")`，然后：
+```
+swift build --triple arm64-apple-ios17.0-simulator \
+  --sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk
+```
+即可在纯 SwiftPM 下对全部 App 源码做 iOS 目标的编译级检查（验完还原 Package.swift）。
