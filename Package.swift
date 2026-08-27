@@ -19,5 +19,17 @@ let package = Package(
             path: "Tests/PLOSKernelTests",
             resources: [.copy("Fixtures")]
         ),
+        // App sources as a SwiftPM library so the app's data loop is testable headlessly
+        // (and cross-typecheckable for iOS without Xcode — see ACCEPTANCE.md "影子构建").
+        .target(
+            name: "PLOSAppCheck",
+            dependencies: ["PLOSKernel"],
+            path: "PLOS"
+        ),
+        .testTarget(
+            name: "PLOSAppTests",
+            dependencies: ["PLOSAppCheck", "PLOSKernel"],
+            path: "Tests/PLOSAppTests"
+        ),
     ]
 )

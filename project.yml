@@ -2,6 +2,17 @@ name: PLOS
 options:
   deploymentTarget:
     iOS: "17.0"
+schemes:
+  PLOS:
+    build:
+      targets:
+        PLOS: all
+        PLOSUITests: [test]
+    test:
+      targets:
+        - PLOSUITests
+    run:
+      config: Debug
 packages:
   PLOSKernel:
     path: .
@@ -15,12 +26,70 @@ targets:
     dependencies:
       - package: PLOSKernel
         product: PLOSKernel
+      - target: PLOSWidget
+        embed: true
+    entitlements:
+      path: PLOS/PLOS.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.plos.app
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.plos.app
         INFOPLIST_FILE: ""
         GENERATE_INFOPLIST_FILE: YES
+        # Without a launch screen iOS runs the app letterboxed in compatibility mode
+        # (shrunken window, content colliding with the floating tab bar).
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        # Must match PLOSWidget's — an extension's version has to equal its parent app's.
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
         SWIFT_VERSION: "5.0"
         SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
         TARGETED_DEVICE_FAMILY: "1,2"
         ENABLE_USER_SCRIPT_SANDBOXING: NO
+  PLOSUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: PLOSUITests
+    dependencies:
+      - target: PLOS
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.plos.app.uitests
+        SWIFT_VERSION: "5.0"
+        TEST_TARGET_NAME: PLOS
+        GENERATE_INFOPLIST_FILE: YES
+  PLOSWidget:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: PLOSWidget
+      # Widget shares the app's design tokens — no hex literals in widget views.
+      - path: PLOS/DesignSystem.swift
+    entitlements:
+      path: PLOSWidget/PLOSWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.plos.app
+    info:
+      path: PLOSWidget/Info.plist
+      properties:
+        CFBundleDisplayName: PLOS
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.plos.app.PLOSWidget
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.0"
+        SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        SKIP_INSTALL: YES

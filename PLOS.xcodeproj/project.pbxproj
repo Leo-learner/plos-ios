@@ -10,6 +10,7 @@
 		04FF4DFE7082F2727D0CCDA4 /* ProgressDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6CAE377F2B35877E95D620E /* ProgressDashboardView.swift */; };
 		19CFAB8B0D92A10DDBACD241 /* PLOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777D5600859FFD89DCDA9CA2 /* PLOSApp.swift */; };
 		1C1CFE8896213BEC159CFBF4 /* PLOSIntApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5535FB37221C81FABFDA36 /* PLOSIntApp.swift */; };
+		1E7143F94229DD866ADBDBEB /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2F1C6A395B66F9ED67A634 /* NotificationSettingsView.swift */; };
 		320075170A7929520B0168CB /* PlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37C8F56058910DA93BF90A36 /* PlanView.swift */; };
 		32FBE2401514CA5AB1B4C909 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E58141FB469B4960DD5847D /* DesignSystem.swift */; };
 		347EB62B91E02299CC42FD79 /* DataSafetyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4091667461BBA00DF3D014B /* DataSafetyView.swift */; };
@@ -23,15 +24,51 @@
 		68A743A66A7C17CEB9B1FC67 /* SharedViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD43D8C539453D5D8F31E98 /* SharedViews.swift */; };
 		6C0CFD72825FCEC34E0C94C5 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B7F5A47746E5DD1B857553 /* Components.swift */; };
 		741F63B40DF1BA81956A6C8C /* EveningReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E5DA9948B8511FA7C60A91 /* EveningReportView.swift */; };
+		75C6A0F28D94D1C0D1D25B83 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E58141FB469B4960DD5847D /* DesignSystem.swift */; };
 		7E1CA2E2C18716369DD56164 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FABECDEB5A8B40D3F955170 /* Persistence.swift */; };
+		861834FEA06CEDAC3BEA9288 /* PLOSWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5EA407A389BF691531782E47 /* PLOSWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		8CAA447E97F362E152B3B722 /* MorningEnergyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF94D0D81F6E85A67D99ABBE /* MorningEnergyView.swift */; };
 		A2340F0B4B6806B87170E161 /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A4A66F041CB156A2DF5B9A /* EventsView.swift */; };
+		B1603B3FB461A5A80C062902 /* PLOSWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5F957E0F53071C920A5A53 /* PLOSWidget.swift */; };
 		BC47B8B15B3720F7CF6A8CCC /* PLOSKernel in Frameworks */ = {isa = PBXBuildFile; productRef = 0ED25747BE4815CEDE61D3E1 /* PLOSKernel */; };
 		BFC934063A351B76A48E191F /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20987ECFC6A4D86605BCBF9E /* MockData.swift */; };
 		C3D1E9B8B86EB94E40C7DF28 /* MonthSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F01DEEA609CB7F680C926ABD /* MonthSetupView.swift */; };
 		DC1345D20B0DB097EC6C3DC1 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA7B7670ECE63D1F1BEDDCB /* AppViewModel.swift */; };
+		F3481238E971B89443804E48 /* WidgetPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDEEC1D060E494141D971CB3 /* WidgetPublisher.swift */; };
+		F7916FEBA881552B7C8F811C /* PLOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A1EB4B255559F5D7102E9C /* PLOSUITests.swift */; };
 		F8525D36E41FFED4CB1D0D99 /* RestDayViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDB03E222775D0816D277AB /* RestDayViews.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4B2104404377865A5A48DC92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3E2C8E4E824D5F07794AAB4F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0A453B4964C2F89F6B27AB22;
+			remoteInfo = PLOSWidget;
+		};
+		DAAEB44FD2F586234CB32D7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3E2C8E4E824D5F07794AAB4F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A3623BDEE6814E56ECE51208;
+			remoteInfo = PLOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7936F64C59A4C5D74019E955 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				861834FEA06CEDAC3BEA9288 /* PLOSWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		03310843CF238E2119073E15 /* PersistenceMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceMapping.swift; sourceTree = "<group>"; };
@@ -47,15 +84,24 @@
 		3F5535FB37221C81FABFDA36 /* PLOSIntApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PLOSIntApp.swift; sourceTree = "<group>"; };
 		5DBC7B529C014994B7A52A2A /* TodayPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayPlanView.swift; sourceTree = "<group>"; };
 		5DDB03E222775D0816D277AB /* RestDayViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestDayViews.swift; sourceTree = "<group>"; };
+		5EA407A389BF691531782E47 /* PLOSWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = PLOSWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F1A6FD78694A22C2C909F7A /* PLOSUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PLOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		777D5600859FFD89DCDA9CA2 /* PLOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PLOSApp.swift; sourceTree = "<group>"; };
 		7FABECDEB5A8B40D3F955170 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		8AFE3AF46E275B80E11223F7 /* plos-ios */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "plos-ios"; path = .; sourceTree = SOURCE_ROOT; };
+		8EE8A8F12DCED32FEC062920 /* PLOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PLOS.entitlements; sourceTree = "<group>"; };
 		91DB92981BE6BCCB6254B15B /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		9E58141FB469B4960DD5847D /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		AFD43D8C539453D5D8F31E98 /* SharedViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViews.swift; sourceTree = "<group>"; };
+		C4A1EB4B255559F5D7102E9C /* PLOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PLOSUITests.swift; sourceTree = "<group>"; };
 		C4E5DA9948B8511FA7C60A91 /* EveningReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveningReportView.swift; sourceTree = "<group>"; };
 		C5FCAE9E545532AE63DC4486 /* PLOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PLOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C996939B411F75C4F94F9DAE /* PLOSWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PLOSWidget.entitlements; sourceTree = "<group>"; };
+		CDEEC1D060E494141D971CB3 /* WidgetPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPublisher.swift; sourceTree = "<group>"; };
+		CEE2ECF351060FB9679C5A8C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D6CAE377F2B35877E95D620E /* ProgressDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressDashboardView.swift; sourceTree = "<group>"; };
+		DB5F957E0F53071C920A5A53 /* PLOSWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PLOSWidget.swift; sourceTree = "<group>"; };
+		ED2F1C6A395B66F9ED67A634 /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
 		EF94D0D81F6E85A67D99ABBE /* MorningEnergyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorningEnergyView.swift; sourceTree = "<group>"; };
 		F01DEEA609CB7F680C926ABD /* MonthSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthSetupView.swift; sourceTree = "<group>"; };
 		F4091667461BBA00DF3D014B /* DataSafetyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSafetyView.swift; sourceTree = "<group>"; };
@@ -73,11 +119,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0F3F7B14247E4A5469A25A6B /* PLOSUITests */ = {
+			isa = PBXGroup;
+			children = (
+				C4A1EB4B255559F5D7102E9C /* PLOSUITests.swift */,
+			);
+			path = PLOSUITests;
+			sourceTree = "<group>";
+		};
 		104DDF23CBF30BD04C3BAAA7 = {
 			isa = PBXGroup;
 			children = (
 				7CAAD25E12DEC38D7BE5EA52 /* Packages */,
 				2AA933B9729E1B414804A27E /* PLOS */,
+				0F3F7B14247E4A5469A25A6B /* PLOSUITests */,
+				CC8DD11EF7A9676395185305 /* PLOSWidget */,
 				44EFDC3678943499525FC87D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -97,10 +153,12 @@
 				F01DEEA609CB7F680C926ABD /* MonthSetupView.swift */,
 				EF94D0D81F6E85A67D99ABBE /* MorningEnergyView.swift */,
 				91DB92981BE6BCCB6254B15B /* Notifications.swift */,
+				ED2F1C6A395B66F9ED67A634 /* NotificationSettingsView.swift */,
 				05D5C4DB90B877EA9D3344DC /* OnboardingView.swift */,
 				7FABECDEB5A8B40D3F955170 /* Persistence.swift */,
 				03310843CF238E2119073E15 /* PersistenceMapping.swift */,
 				37C8F56058910DA93BF90A36 /* PlanView.swift */,
+				8EE8A8F12DCED32FEC062920 /* PLOS.entitlements */,
 				777D5600859FFD89DCDA9CA2 /* PLOSApp.swift */,
 				3F5535FB37221C81FABFDA36 /* PLOSIntApp.swift */,
 				D6CAE377F2B35877E95D620E /* ProgressDashboardView.swift */,
@@ -108,6 +166,7 @@
 				5DDB03E222775D0816D277AB /* RestDayViews.swift */,
 				AFD43D8C539453D5D8F31E98 /* SharedViews.swift */,
 				5DBC7B529C014994B7A52A2A /* TodayPlanView.swift */,
+				CDEEC1D060E494141D971CB3 /* WidgetPublisher.swift */,
 			);
 			path = PLOS;
 			sourceTree = "<group>";
@@ -116,6 +175,8 @@
 			isa = PBXGroup;
 			children = (
 				C5FCAE9E545532AE63DC4486 /* PLOS.app */,
+				6F1A6FD78694A22C2C909F7A /* PLOSUITests.xctest */,
+				5EA407A389BF691531782E47 /* PLOSWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -128,19 +189,48 @@
 			name = Packages;
 			sourceTree = "<group>";
 		};
+		CC8DD11EF7A9676395185305 /* PLOSWidget */ = {
+			isa = PBXGroup;
+			children = (
+				CEE2ECF351060FB9679C5A8C /* Info.plist */,
+				C996939B411F75C4F94F9DAE /* PLOSWidget.entitlements */,
+				DB5F957E0F53071C920A5A53 /* PLOSWidget.swift */,
+			);
+			path = PLOSWidget;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		0A453B4964C2F89F6B27AB22 /* PLOSWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D9D28BCCD3DCB4BE35DA3CF /* Build configuration list for PBXNativeTarget "PLOSWidget" */;
+			buildPhases = (
+				05F3A329F334355A5749306B /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PLOSWidget;
+			packageProductDependencies = (
+			);
+			productName = PLOSWidget;
+			productReference = 5EA407A389BF691531782E47 /* PLOSWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		A3623BDEE6814E56ECE51208 /* PLOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BCE2A106F99F8D9D00316156 /* Build configuration list for PBXNativeTarget "PLOS" */;
 			buildPhases = (
 				E3BCF4F9794C3F8D064D4FA6 /* Sources */,
 				BB838E28FB55B601CE23DA07 /* Frameworks */,
+				7936F64C59A4C5D74019E955 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				633170FA750248973401B206 /* PBXTargetDependency */,
 			);
 			name = PLOS;
 			packageProductDependencies = (
@@ -149,6 +239,24 @@
 			productName = PLOS;
 			productReference = C5FCAE9E545532AE63DC4486 /* PLOS.app */;
 			productType = "com.apple.product-type.application";
+		};
+		C84F563FFB8A3A8B72DADFC9 /* PLOSUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 743626722E8EF1CB3829B765 /* Build configuration list for PBXNativeTarget "PLOSUITests" */;
+			buildPhases = (
+				EC8D8056CD6E5D150E6999F5 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B1F81C7A64A609FA15213B00 /* PBXTargetDependency */,
+			);
+			name = PLOSUITests;
+			packageProductDependencies = (
+			);
+			productName = PLOSUITests;
+			productReference = 6F1A6FD78694A22C2C909F7A /* PLOSUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -159,6 +267,9 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					C84F563FFB8A3A8B72DADFC9 = {
+						TestTargetID = A3623BDEE6814E56ECE51208;
+					};
 				};
 			};
 			buildConfigurationList = 4D305ACD4D7B206CB4F04B7D /* Build configuration list for PBXProject "PLOS" */;
@@ -179,11 +290,22 @@
 			projectRoot = "";
 			targets = (
 				A3623BDEE6814E56ECE51208 /* PLOS */,
+				C84F563FFB8A3A8B72DADFC9 /* PLOSUITests */,
+				0A453B4964C2F89F6B27AB22 /* PLOSWidget */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		05F3A329F334355A5749306B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75C6A0F28D94D1C0D1D25B83 /* DesignSystem.swift in Sources */,
+				B1603B3FB461A5A80C062902 /* PLOSWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E3BCF4F9794C3F8D064D4FA6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -199,6 +321,7 @@
 				BFC934063A351B76A48E191F /* MockData.swift in Sources */,
 				C3D1E9B8B86EB94E40C7DF28 /* MonthSetupView.swift in Sources */,
 				8CAA447E97F362E152B3B722 /* MorningEnergyView.swift in Sources */,
+				1E7143F94229DD866ADBDBEB /* NotificationSettingsView.swift in Sources */,
 				4BDC9880B5840142B066669F /* Notifications.swift in Sources */,
 				56C520C33E7E06C840906EFB /* OnboardingView.swift in Sources */,
 				19CFAB8B0D92A10DDBACD241 /* PLOSApp.swift in Sources */,
@@ -211,25 +334,51 @@
 				F8525D36E41FFED4CB1D0D99 /* RestDayViews.swift in Sources */,
 				68A743A66A7C17CEB9B1FC67 /* SharedViews.swift in Sources */,
 				5582E0A9F05211131E328A9B /* TodayPlanView.swift in Sources */,
+				F3481238E971B89443804E48 /* WidgetPublisher.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC8D8056CD6E5D150E6999F5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F7916FEBA881552B7C8F811C /* PLOSUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		633170FA750248973401B206 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0A453B4964C2F89F6B27AB22 /* PLOSWidget */;
+			targetProxy = 4B2104404377865A5A48DC92 /* PBXContainerItemProxy */;
+		};
+		B1F81C7A64A609FA15213B00 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A3623BDEE6814E56ECE51208 /* PLOS */;
+			targetProxy = DAAEB44FD2F586234CB32D7E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		3A384355A04EA245687C07C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PLOS/PLOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.plos.app;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -237,6 +386,25 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
+		};
+		5C7201DBB8FEB2D93BC9533D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.plos.app.uitests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = PLOS;
+			};
+			name = Release;
 		};
 		7798DC9EE57784ECF700D1DA /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -293,6 +461,71 @@
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
+		};
+		9D7BC37023C21080AF461D2A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.plos.app.uitests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = PLOS;
+			};
+			name = Debug;
+		};
+		A6EFB4F2F0785926A50AF7D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PLOSWidget/PLOSWidget.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = PLOSWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.plos.app.PLOSWidget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		BD24A7AE1132E32BB61A59FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PLOSWidget/PLOSWidget.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = PLOSWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.plos.app.PLOSWidget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
 		};
 		CD5ED09A221680D2ACB7D2CD /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -361,15 +594,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PLOS/PLOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.plos.app;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -381,11 +618,29 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3D9D28BCCD3DCB4BE35DA3CF /* Build configuration list for PBXNativeTarget "PLOSWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BD24A7AE1132E32BB61A59FF /* Debug */,
+				A6EFB4F2F0785926A50AF7D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		4D305ACD4D7B206CB4F04B7D /* Build configuration list for PBXProject "PLOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CD5ED09A221680D2ACB7D2CD /* Debug */,
 				7798DC9EE57784ECF700D1DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		743626722E8EF1CB3829B765 /* Build configuration list for PBXNativeTarget "PLOSUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9D7BC37023C21080AF461D2A /* Debug */,
+				5C7201DBB8FEB2D93BC9533D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
